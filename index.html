@@ -20,26 +20,23 @@
 
       .scene--canyon .economy-step--2 .chart-container {
         width: 100%;
-        max-width: 620px;
-        height: min(72svh, 680px);
+        max-width: 680px;
+        height: min(76svh, 720px);
         margin: 0;
         justify-self: center;
-        overflow: hidden;
+        overflow: visible;
         pointer-events: auto;
       }
 
       .scene--canyon .economy-step--2 .chart-container iframe {
-        position: static;
-        top: 0;
-        left: 0;
-        width: 108%;
-        height: 108%;
+        display: block;
+        width: 100%;
+        height: 100%;
         border: none;
         background: transparent;
-        transform: translate(10px,-12px) scale(0.85);
+        transform: translate(10px,-8px) scale(0.92);
         transform-origin: top left;
-        pointer-events: auto;
-        overflow: hidden;
+        overflow: visible;
       }
 
       @media (max-width: 760px) {
