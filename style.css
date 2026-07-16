@@ -2889,5 +2889,23 @@ body::selection {
     height: 166.667%;
     transform: scale(0.60);
     transform-origin: top left;
+    /* 最终覆盖：第三部分第二页 P2.8 桌面端图表 */
+@media (min-width: 761px) {
+  .chapter2-economy
+  .scene--canyon
+  .economy-step--2
+  .chart-container {
+    overflow: hidden !important;
+    transform: translate(10px, -12px) !important;
+  }
+
+  .chapter2-economy
+  .scene--canyon
+  .economy-step--2
+  .chart-container iframe {
+    width: 114% !important;
+    height: 114% !important;
+    transform: scale(0.88) !important;
+    transform-origin: top left !important;
   }
 }
