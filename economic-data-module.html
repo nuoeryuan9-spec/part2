@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>经济数据展示模块</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --accent: #e85a2a;
+        --orange: #f08a24;
+        --blue: #2f91c5;
+        --green: #4f9b68;
+        --purple: #8b6bae;
+        --text: #222222;
+        --muted: #666666;
+        --line: rgba(0, 0, 0, 0.12);
+        --font-main: Inter, "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background: transparent !important;
+      }
+
+      body {
+        display: grid;
+        justify-items: center;
+        align-items: start;
+        color: var(--text);
+        font-family: var(--font-main);
+        text-rendering: geometricPrecision;
+      }
+
+      .economic-section {
+        width: 1325px;
+        height: 828px;
+        margin: 0 auto;
+        padding-top: 48px;
+        overflow: hidden;
+        background: transparent;
+      }
+
+      .top-row {
+        display: grid;
+        grid-template-columns: 820px 460px;
+        align-items: center;
+        column-gap: 40px;
+        width: 1320px;
+        height: 480px;
+        margin: 0 auto;
+        background: transparent;
+      }
+
+      .city-visual {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 820px;
+        height: 480px;
+        overflow: visible;
+        background: transparent;
+      }
+
+      .city-visual img {
+        display: block;
+        width: 640px;
+        height: auto;
+        object-fit: contain;
+        user-select: none;
+      }
+
+      .main-card {
+        align-self: center;
+        width: 460px;
+        height: 360px;
+        padding: 48px;
+        border-radius: 32px;
+        background: rgba(255, 255, 255, 0.92);
+        box-shadow: 0 24px 60px rgba(80, 50, 20, 0.12);
+      }
+
+      .data-index {
+        display: block;
+        color: var(--accent);
+        font-size: 14px;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        line-height: 1;
+      }
+
+      .main-card__value {
+        margin: 34px 0 18px;
+        color: var(--accent);
+        font-size: 64px;
+        font-weight: 850;
+        letter-spacing: 0;
+        line-height: 0.95;
+        white-space: nowrap;
+      }
+
+      .main-card__label {
+        margin: 0;
+        color: var(--text);
+        font-size: 22px;
+        font-weight: 750;
+        line-height: 1.45;
+      }
+
+      .main-card__note {
+        margin: 10px 0 0;
+        color: var(--muted);
+        font-size: 17px;
+        font-weight: 500;
+        line-height: 1.55;
+      }
+
+      .bottom-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        width: 100%;
+        height: 260px;
+        margin-top: 12px;
+        background: transparent;
+      }
+
+      .metric {
+        height: 260px;
+        padding: 8px 44px 0;
+        background: transparent;
+      }
+
+      .metric:first-child {
+        padding-left: 72px;
+      }
+
+      .metric:last-child {
+        padding-right: 72px;
+      }
+
+      .metric + .metric {
+        border-left: 1px solid var(--line);
+      }
+
+      .metric .data-index {
+        color: var(--metric-color);
+        opacity: 0.84;
+      }
+
+      .metric__value {
+        margin: 18px 0 10px;
+        color: var(--metric-color);
+        font-size: 42px;
+        font-weight: 850;
+        letter-spacing: 0;
+        line-height: 1.08;
+        white-space: nowrap;
+      }
+
+      .metric__label,
+      .metric__note {
+        margin: 0;
+        line-height: 1.55;
+      }
+
+      .metric__label {
+        color: var(--text);
+        font-size: 18px;
+        font-weight: 720;
+      }
+
+      .metric__note {
+        margin-top: 6px;
+        color: var(--muted);
+        font-size: 15px;
+        font-weight: 500;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="economic-section" aria-label="热浪经济数据展示模块">
+      <div class="top-row">
+        <div class="city-visual">
+          <img src="assets/街景1.png" alt="暖色有机几何风格城市街景插画" draggable="false">
+        </div>
+
+        <div class="main-card" aria-label="潜在劳动生产力损失">
+          <span class="data-index">01</span>
+          <p class="main-card__value">2,826 亿美元</p>
+          <p class="main-card__label">潜在劳动生产力损失</p>
+          <p class="main-card__note">占中国 GDP 的 1.77%</p>
+        </div>
+      </div>
+
+      <div class="bottom-row" aria-label="分项数据">
+        <div class="metric" style="--metric-color: var(--orange);">
+          <span class="data-index">02</span>
+          <p class="metric__value">401 亿小时</p>
+          <p class="metric__label">潜在工作小时损失</p>
+        </div>
+
+        <div class="metric" style="--metric-color: var(--blue);">
+          <span class="data-index">03</span>
+          <p class="metric__value">4270 万美元</p>
+          <p class="metric__label">热浪死亡经济损失</p>
+          <p class="metric__note">较上年增长 +127%</p>
+        </div>
+
+        <div class="metric" style="--metric-color: var(--green);">
+          <span class="data-index">04</span>
+          <p class="metric__value">38.9%</p>
+          <p class="metric__label">四大行业损失占比</p>
+          <p class="metric__note">（农业 / 建筑 / 制造 / 服务业）</p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
