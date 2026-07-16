@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>农作物产量随气温变化</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: transparent;
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    padding: 20px;
+  }
+  .grid-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    max-width: 780px;
+    margin: 0 auto;
+  }
+  .crop-card {
+    background: transparent;
+    border-radius: 14px;
+    padding: 0;
+  }
+  .card-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    margin-bottom: 0;
+    background: #faeec9;
+    border-radius: 10px 10px 0 0;
+    border-bottom: 2px solid;
+  }
+  .card-title .emoji { font-size: 28px; line-height: 1; }
+  .card-title .name {
+    font-size: 18px; font-weight: 700; letter-spacing: 2px;
+  }
+  .chart-area {
+    width: 100%;
+    height: 260px;
+    background: #ffffff;
+    border-radius: 0 0 10px 10px;
+    padding: 8px 4px 4px;
+  }
+
+  .c-wheat   .card-title { border-color: #ed8f21; }
+  .c-wheat   .name { color: #cd5817; }
+  .c-rice    .card-title { border-color: #e7c579; }
+  .c-rice    .name { color: #b8860b; }
+  .c-maize   .card-title { border-color: #cd5817; }
+  .c-maize   .name { color: #a04015; }
+  .c-soybean .card-title { border-color: #8b9e4e; }
+  .c-soybean .name { color: #5d7a1e; }
+</style>
+</head>
+<body>
+
+<div class="grid-container">
+  <div class="crop-card c-wheat">
+    <div class="card-title"><span class="emoji">🌾</span><span class="name">小麦</span></div>
+    <div id="chart-wheat" class="chart-area"></div>
+  </div>
+  <div class="crop-card c-rice">
+    <div class="card-title"><span class="emoji">🌾</span><span class="name">水稻</span></div>
+    <div id="chart-rice" class="chart-area"></div>
+  </div>
+  <div class="crop-card c-maize">
+    <div class="card-title"><span class="emoji">🌽</span><span class="name">玉米</span></div>
+    <div id="chart-maize" class="chart-area"></div>
+  </div>
+  <div class="crop-card c-soybean">
+    <div class="card-title"><span class="emoji">🫘</span><span class="name">大豆</span></div>
+    <div id="chart-soybean" class="chart-area"></div>
+  </div>
+</div>
+
+<script>
+const YELLOW_TOP = '#f5c443';
+const YELLOW_BOT = '#ed8f21';
+const GREEN_TOP  = '#7ec850';
+const GREEN_BOT  = '#3d9b2e';
+const ARROW_COLOR = '#cd5817';
+
+const CROPS = [
+  { key: 'wheat',   name: '小麦', loss: 6.0 },
+  { key: 'rice',    name: '水稻', loss: 3.2 },
+  { key: 'maize',   name: '玉米', loss: 7.4 },
+  { key: 'soybean', name: '大豆', loss: 3.1 }
+];
+
+const Y_MAX = 108;
+
+CROPS.forEach(crop => {
+  const remain = 100 - crop.loss;
+  const dom = document.getElementById('chart-' + crop.key);
+  const chart = echarts.init(dom);
+
+  // Calculate pixel positions for arrow (approximate based on grid)
+  // grid: top=30, bottom=45, chart height=260 → plot height ≈ 185
+  // y-axis: 0 to 108
+  const plotTop = 30;
+  const plotHeight = 185;
+  const yToPx = (val) => plotTop + plotHeight * (1 - val / Y_MAX);
+
+  // Bar centers: category index 0 and 1
+  // grid left=55, right=25, width ~290 → each category center
+  const plotLeft = 55;
+  const plotWidth = 250;
+  const bar0X = plotLeft + plotWidth * 0.25;
+  const bar1X = plotLeft + plotWidth * 0.75;
+  const y100 = yToPx(100);
+  const yRemain = yToPx(remain);
+
+  chart.setOption({
+    backgroundColor: 'transparent',
+    animation: true,
+    animationDuration: 1000,
+    animationEasing: 'cubicOut',
+    grid: { top: 30, right: 25, bottom: 45, left: 55 },
+    xAxis: {
+      type: 'category',
+      data: ['原产量', '升温1℃后'],
+      axisLine: { lineStyle: { color: '#ddd' } },
+      axisLabel: { color: '#888', fontSize: 12, fontWeight: 600 },
+      axisTick: { show: false }
+    },
+    yAxis: {
+      type: 'value',
+      min: 0,
+      max: Y_MAX,
+      axisLine: { show: false },
+      axisLabel: { color: '#bbb', fontSize: 10, formatter: '{value}%' },
+      splitLine: { lineStyle: { color: '#f5f5f5', type: 'dashed' } },
+      axisTick: { show: false }
+    },
+    tooltip: {
+      trigger: 'axis',
+      backgroundColor: 'rgba(255,255,255,0.95)',
+      borderColor: '#e7c579',
+      textStyle: { color: '#6b4c2a', fontSize: 12 },
+      formatter: function(params) {
+        return '<b>' + crop.name + '</b><br/>' +
+          params[0].name + ': ' + params[0].value + '%<br/>' +
+          params[1].name + ': ' + params[1].value + '%<br>' +
+          '<span style="color:' + ARROW_COLOR + ';font-weight:700;">产量下降 ' + crop.loss + '%</span>';
+      }
+    },
+    series: [
+      {
+        name: '原产量',
+        type: 'bar',
+        data: [100, '-'],
+        barWidth: '32%',
+        itemStyle: {
+          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+            { offset: 0, color: YELLOW_TOP },
+            { offset: 1, color: YELLOW_BOT }
+          ]),
+          borderRadius: [6, 6, 0, 0]
+        },
+        label: {
+          show: true, position: 'top',
+          color: '#cd5817', fontSize: 14, fontWeight: 700,
+          formatter: '100%'
+        }
+      },
+      {
+        name: '升温1℃后',
+        type: 'bar',
+        data: ['-', remain],
+        barWidth: '32%',
+        itemStyle: {
+          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+            { offset: 0, color: GREEN_TOP },
+            { offset: 1, color: GREEN_BOT }
+          ]),
+          borderRadius: [6, 6, 0, 0]
+        },
+        label: {
+          show: true, position: 'top',
+          color: '#3d9b2e', fontSize: 14, fontWeight: 700,
+          formatter: remain.toFixed(1) + '%'
+        }
+      }
+    ],
+    graphic: [
+      // Dashed arrow line from bar0 top to bar1 top
+      {
+        type: 'line',
+        shape: { x1: bar0X, y1: y100, x2: bar1X, y2: yRemain },
+        style: { stroke: ARROW_COLOR, lineWidth: 2, lineDash: [5, 4] },
+        silent: true
+      },
+      // Arrow head
+      {
+        type: 'polygon',
+        shape: {
+          points: [
+            [bar1X - 8, yRemain - 5],
+            [bar1X, yRemain],
+            [bar1X - 8, yRemain + 5]
+          ]
+        },
+        style: { fill: ARROW_COLOR },
+        silent: true
+      },
+      // "产量下降X%" text
+      {
+        type: 'text',
+        style: {
+          text: '产量下降 ' + crop.loss + '%',
+          x: (bar0X + bar1X) / 2,
+          y: Math.min(y100, yRemain) - 22,
+          fill: ARROW_COLOR,
+          font: 'bold 13px "PingFang SC", "Microsoft YaHei", sans-serif',
+          textAlign: 'center',
+          textVerticalAlign: 'middle'
+        },
+        silent: true
+      }
+    ]
+  });
+
+  window.addEventListener('resize', () => chart.resize());
+});
+</script>
+
+</body>
+</html>

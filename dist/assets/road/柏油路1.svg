@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="932" height="6748" viewBox="0 0 932 6748" preserveAspectRatio="xMidYMin meet" fill="none">
+  <defs>
+    <!-- Hand-redrawn editable road path. This is not traced or generated from pixels. -->
+    <path
+      id="road-center"
+      d="M690 -120
+         C718 86 638 210 512 286
+         C365 375 214 424 224 568
+         C236 734 420 760 585 830
+         C738 895 726 1064 590 1176
+         C455 1288 276 1284 252 1434
+         C232 1570 350 1630 486 1688
+         C650 1758 722 1890 606 2028
+         C490 2168 318 2146 262 2294
+         C204 2448 360 2550 522 2608
+         C704 2674 706 2852 486 2972
+         C340 3052 212 3142 232 3294
+         C254 3450 430 3508 592 3572
+         C750 3635 700 3840 540 3940
+         C392 4032 316 4162 516 4322
+         C672 4448 735 4576 612 4724
+         C500 4858 304 4874 252 5024
+         C200 5176 358 5286 540 5356
+         C672 5407 728 5550 616 5702
+         C520 5831 352 5848 286 6002
+         C220 6157 332 6292 504 6362
+         C646 6420 695 6574 610 6868"
+    />
+  </defs>
+
+  <g>
+    <use href="#road-center" stroke="#4B4B46" stroke-width="360" stroke-linecap="round" stroke-linejoin="round"/>
+    <use href="#road-center" stroke="#D6D2C9" stroke-width="340" stroke-linecap="round" stroke-linejoin="round"/>
+    <use href="#road-center" stroke="#51514C" stroke-width="326" stroke-linecap="round" stroke-linejoin="round"/>
+    <use href="#road-center" stroke="#2D2E2A" stroke-width="300" stroke-linecap="round" stroke-linejoin="round"/>
+    <use href="#road-center" stroke="#1F201D" stroke-width="300" stroke-linecap="round" stroke-linejoin="round" opacity="0.18"/>
+    <use
+      href="#road-center"
+      stroke="#E7A12F"
+      stroke-width="18"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-dasharray="44 48"
+    />
+  </g>
+</svg>

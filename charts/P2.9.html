@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=397, initial-scale=1.0">
+<title>用电量核心数据 - 创意可视化</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 397px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    display: flex;
+    flex-direction: column;
+    padding: 16px 18px;
+    background: transparent;
+    gap: 10px;
+  }
+  .header { display: flex; align-items: baseline; justify-content: space-between; }
+  .header-title { font-size: 14px; font-weight: 500; color: #412402; letter-spacing: 1px; }
+  .header-sub { font-size: 9px; color: #BA7517; }
+
+  .hero-card {
+    padding: 20px 18px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #D85A30 0%, #EF9F27 100%);
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  .hero-card:hover { opacity: 0.96; }
+  .hero-label { font-size: 11px; color: rgba(255,255,255,0.8); }
+  .hero-value-wrap { display: flex; align-items: baseline; gap: 6px; margin-top: 8px; }
+  #heroNumber { font-size: 38px; font-weight: 500; color: #fff; letter-spacing: -1px; line-height: 1; }
+  .hero-unit { font-size: 15px; color: rgba(255,255,255,0.85); }
+  #heroBadge {
+    display: inline-block; margin-top: 10px;
+    font-size: 10px; color: #fff;
+    background: rgba(74,27,12,0.3);
+    border-radius: 12px; padding: 3px 10px;
+  }
+  #heroDetail { display: none; font-size: 10px; color: rgba(255,255,255,0.9); margin-top: 8px; line-height: 1.6; }
+
+  .cards-row { display: flex; gap: 8px; }
+  .data-card {
+    flex: 1;
+    background: rgba(255,255,255,0.75);
+    border-radius: 10px; padding: 14px 12px;
+    border: 0.5px solid #F5C4B3;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  .data-card:active { transform: scale(0.97); }
+  .card-label { font-size: 10px; }
+  .card-value { font-size: 24px; font-weight: 500; margin-top: 6px; }
+  .card-unit { font-size: 9px; margin-top: 3px; }
+
+  .grid-card {
+    background: rgba(255,255,255,0.75);
+    border-radius: 10px; padding: 14px 14px;
+    border: 0.5px solid #FAC775;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  .grid-card:active { transform: scale(0.97); }
+
+  .speed-frame {
+    background: rgba(255,255,255,0.5);
+    border: 1px solid #F0997B;
+    border-radius: 10px;
+    padding: 12px 16px;
+  }
+  .speed-title { font-size: 11px; font-weight: 500; color: #D85A30; margin-bottom: 10px; }
+  .speed-row { display: flex; gap: 16px; }
+  .speed-item { flex: 1; }
+  .speed-item-label { font-size: 10px; color: #854F0B; margin-bottom: 5px; }
+  .speed-bar-bg { height: 8px; background: #FAEEDA; border-radius: 4px; overflow: hidden; }
+  .speed-bar-fill { height: 100%; border-radius: 4px; }
+  .speed-val { font-size: 12px; font-weight: 500; margin-top: 4px; }
+
+  .footer { font-size: 8px; color: #BA7517; text-align: center; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-title">用电量核心数据</div>
+  <div class="header-sub">国家能源局 · 国家统计局</div>
+</div>
+
+<div class="hero-card" onclick="toggleHeroDetail()">
+  <div class="hero-label">2025年7月全社会用电量</div>
+  <div class="hero-value-wrap">
+    <span id="heroNumber">1.02</span><span class="hero-unit">万亿 kWh</span>
+  </div>
+  <div id="heroBadge">首次单月突破万亿大关</div>
+  <div id="heroDetail">同比增长 +8.6% · 较2024年全年提速 1.8pp · 工业用电与高温天气双重驱动</div>
+</div>
+
+<div class="cards-row">
+  <div class="data-card" onclick="pulseCard(this)">
+    <div class="card-label" style="color:#854F0B;">2024年全年用电量</div>
+    <div class="card-value" style="color:#412402;">98,521</div>
+    <div class="card-unit" style="color:#BA7517;">亿 kWh</div>
+  </div>
+  <div class="data-card" onclick="pulseCard(this)">
+    <div class="card-label" style="color:#993C1D;">2024年全年同比增速</div>
+    <div class="card-value" style="color:#D85A30;">+6.8%</div>
+    <div class="card-unit" style="color:#D85A30;">稳健增长</div>
+  </div>
+</div>
+
+<div class="grid-card" onclick="pulseCard(this)">
+  <div style="display:flex;justify-content:space-between;align-items:center;">
+    <div>
+      <div style="font-size:10px;color:#854F0B;">栅格数据覆盖</div>
+      <div style="display:flex;align-items:baseline;gap:4px;margin-top:4px;">
+        <span style="font-size:26px;font-weight:500;color:#412402;">280</span>
+        <span style="font-size:13px;color:#BA7517;">城</span>
+      </div>
+      <div style="font-size:9px;color:#993C1D;margin-top:3px;">1km x 1km 月度分辨率 · Nature Sci Data 2024</div>
+    </div>
+    <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+      <rect x="2" y="2" width="14" height="14" rx="2" fill="rgba(250,238,218,0.6)" stroke="#EF9F27" stroke-width="1"/>
+      <rect x="18" y="2" width="28" height="14" rx="2" fill="rgba(250,236,231,0.6)" stroke="#D85A30" stroke-width="1"/>
+      <rect x="2" y="18" width="14" height="28" rx="2" fill="rgba(250,236,231,0.6)" stroke="#D85A30" stroke-width="1"/>
+      <rect x="18" y="18" width="12" height="12" rx="2" fill="rgba(250,238,218,0.6)" stroke="#EF9F27" stroke-width="1"/>
+      <rect x="34" y="18" width="12" height="12" rx="2" fill="rgba(251,234,240,0.6)" stroke="#ED93B1" stroke-width="1"/>
+      <rect x="18" y="34" width="12" height="12" rx="2" fill="rgba(251,234,240,0.6)" stroke="#ED93B1" stroke-width="1"/>
+      <rect x="34" y="34" width="12" height="12" rx="2" fill="rgba(250,236,231,0.6)" stroke="#D85A30" stroke-width="1"/>
+    </svg>
+  </div>
+</div>
+
+<div class="speed-frame">
+  <div class="speed-title">增速对比</div>
+  <div class="speed-row">
+    <div class="speed-item">
+      <div class="speed-item-label">2024年全年</div>
+      <div class="speed-bar-bg"><div class="speed-bar-fill" style="width:68%;background:#ED93B1;"></div></div>
+      <div class="speed-val" style="color:#993556;">+6.8%</div>
+    </div>
+    <div class="speed-item">
+      <div class="speed-item-label">2025年7月</div>
+      <div class="speed-bar-bg"><div id="speedBar" class="speed-bar-fill" style="width:0%;background:#D85A30;transition:width 1s ease-out 0.5s;"></div></div>
+      <div class="speed-val" style="color:#D85A30;">+8.6%</div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">数据来源：国家能源局月度电力统计数据、国家统计局能源数据</div>
+
+<script>
+var heroOpen = false;
+function toggleHeroDetail() {
+  heroOpen = !heroOpen;
+  document.getElementById('heroBadge').style.display = heroOpen ? 'none' : 'inline-block';
+  document.getElementById('heroDetail').style.display = heroOpen ? 'block' : 'none';
+}
+function pulseCard(el) {
+  el.style.transform = 'scale(0.97)';
+  setTimeout(function() { el.style.transform = 'scale(1)'; }, 150);
+}
+setTimeout(function() {
+  document.getElementById('speedBar').style.width = '86%';
+}, 300);
+(function animateHero() {
+  var el = document.getElementById('heroNumber');
+  if (!el) return;
+  var target = 1.02, start = null;
+  function step(ts) {
+    if (!start) start = ts;
+    var p = Math.min((ts - start) / 1500, 1);
+    var ease = 1 - Math.pow(1 - p, 3);
+    el.textContent = (target * ease).toFixed(2);
+    if (p < 1) requestAnimationFrame(step);
+    else el.textContent = target.toFixed(2);
+  }
+  requestAnimationFrame(step);
+})();
+</script>
+</body>
+</html>

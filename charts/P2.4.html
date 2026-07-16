@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>16城年均高温天数与热射病发病趋势</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{background:transparent;width:100%;height:100%}
+body{width:280px;height:397px;display:flex;flex-direction:column;align-items:center;padding:14px 10px 6px;font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;position:relative;overflow:hidden}
+
+.title{font-size:11.5px;font-weight:800;color:#B22222;letter-spacing:.8px;text-align:center;line-height:1.35;margin-bottom:2px;width:100%}
+.subtitle{font-size:7px;color:#A05252;text-align:center;margin-bottom:6px;font-weight:500}
+
+.chart-wrap{position:relative;width:100%;flex:1;min-height:0}
+
+svg.chart{width:100%;height:100%;display:block}
+
+.bar-rect{transition:all .35s cubic-bezier(.34,1.56,.64,1);cursor:pointer}
+.bar-rect:hover{filter:brightness(1.18)}
+.sun-dot{cursor:pointer;transition:all .3s ease}
+.sun-dot:hover{transform:scale(1.28)}
+.line-path{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.area-fill{opacity:.12}
+.grid-line{stroke:#E8C8C8;stroke-width:.5;stroke-dasharray:3 3}
+.axis-line{stroke:#CC8888;stroke-width:.8}
+.axis-text{font-size:7.5px;fill:#995555;font-weight:600}
+.axis-label{font-size:7.5px;fill:#AA3333;font-weight:700}
+.y-left-label{font-size:7px;fill:#BB4444;font-weight:700;text-anchor:end}
+.y-right-label{font-size:7px;fill:#DD8800;font-weight:700;text-anchor:start}
+.value-tag{pointer-events:none;opacity:0;transition:all .3s ease;font-weight:800;font-size:9px}
+.value-tag.show{opacity:1}
+
+.tooltip-box{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(.85);background:rgba(255,255,255,.95);backdrop-filter:blur(6px);border:2px solid rgba(220,60,40,.55);border-radius:12px;padding:9px 13px;text-align:center;min-width:118px;box-shadow:0 4px 18px rgba(200,50,30,.15);z-index:20;opacity:0;pointer-events:none;transition:all .32s cubic-bezier(.34,1.56,.64,1)}
+.tooltip-box.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
+.tip-title{font-size:10.5px;font-weight:800;color:#C41E3A}
+.tip-row{font-size:8.5px;font-weight:600;color:#885533;margin-top:3px}
+.tip-val{font-weight:900;color:#D84315}
+.source-note{font-size:6.2px;color:#B08888;text-align:center;margin-top:auto;padding-top:3px;z-index:2;font-style:italic;letter-spacing:.3px;width:100%}
+.correl-note{font-size:7px;color:#CC6666;text-align:center;margin-top:2px;font-weight:700}
+
+@keyframes barRise{from{opacity:0;transform:scaleY(0)}to{opacity:1;transform:scaleY(1)}}
+.bar-rect{transform-origin:bottom center;animation:barRise .55s ease-out backwards}
+@keyframes lineIn{from{stroke-dashoffset:300}to{stroke-dashoffset:0}}
+.line-path{stroke-dasharray:300;stroke-dashoffset:300;animation:lineIn 1s ease-out .4s forwards}
+@keyframes sunPop{from{opacity:0;transform:scale(0)}to{opacity:1;transform:scale(1)}}
+.sun-dot{animation:sunPop .42s ease-out backwards;transform-origin:center}
+</style>
+</head>
+<body>
+
+<h1 class="title">16城市年均高温天数与热射病发病趋势（2018–2024年）</h1>
+
+<div class="chart-wrap">
+<svg class="chart" viewBox="-28 -20 310 244" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <!-- 鹤顶红柱状渐变 -->
+  <linearGradient id="barGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+    <stop offset="0%" stop-color="#FF3333"/>
+    <stop offset="45%" stop-color="#E31C1C"/>
+    <stop offset="100%" stop-color="#B71C1C"/>
+  </linearGradient>
+  <!-- 太阳漫画渐变 -->
+  <radialGradient id="sunDotGrad" cx="38%" cy="32%" r="55%">
+    <stop offset="0%" stop-color="#FFF59D"/>
+    <stop offset="40%" stop-color="#FFB300"/>
+    <stop offset="100%" stop-color="#E65100"/>
+  </radialGradient>
+  <!-- 面积填充 -->
+  <linearGradient id="areaGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+    <stop offset="0%" stop-color="#FFB300" stop-opacity=".22"/>
+    <stop offset="100%" stop-color="#FFB300" stop-opacity="0"/>
+  </linearGradient>
+</defs>
+
+<!-- 网格线 -->
+<g id="gridLines"></g>
+
+<!-- Y轴 -->
+<g id="yAxisLeft"></g>
+<g id="yAxisRight"></g>
+
+<!-- 柱状图组（鹤顶红色） -->
+<g id="barsGroup"></g>
+
+<!-- 折线图区域填充 -->
+<path class="area-fill" id="areaPath" fill="url(#areaGrad)" d=""/>
+
+<!-- 折线 -->
+<path class="line-path" id="linePath" stroke="#F57C00" d=""/>
+
+<!-- 漫画太阳数据点 -->
+<g id="pointsGroup"></g>
+
+<!-- X轴标签 -->
+<g id="xAxisLabels"></g>
+
+<!-- X轴基线 -->
+<line class="axis-line" x1="0" y1="192" x2="270" y2="192"/>
+
+<!-- 数值标注 -->
+<g id="valueTags"></g>
+</svg>
+
+<!-- 提示框 -->
+<div class="tooltip-box" id="tipBox">
+<div class="tip-title" id="tipTitle"></div>
+<div class="tip-row" id="tipRow1"></div>
+<div class="tip-row" id="tipRow2"></div>
+</div>
+</div>
+
+<p class="correl-note">相关系数 r = 0.7943（强正相关）</p>
+<p class="source-note">数据来源：《热射病核心数据汇总》+《中国16城市年高温天数统计》</p>
+
+<script>
+const DATA=[
+{year:2018,days:18,growth:5},{year:2019,days:20,growth:8},
+{year:2020,days:22,growth:10},{year:2021,days:24,growth:14},
+{year:2022,days:28,growth:18},{year:2023,days:30,growth:15},{year:2024,days:36,growth:14}
+];
+const CHART_W=270,CHART_H=182,PAD_L=26,PAD_R=28,PAD_T=10,PAD_B=24;
+const plotW=CHART_W-PAD_L-PAD_R,plotH=CHART_H-PAD_T-PAD_B;
+const maxDays=40,maxGrowth=20;
+const barW=Math.floor(plotW/DATA.length)*.44;
+const gap=(plotW-barW*DATA.length)/(DATA.length+1);
+const baseY=PAD_T+plotH;
+
+// 网格线 + Y轴刻度
+const gridG=document.getElementById('gridLines');
+for(let i=0;i<=5;i++){
+let y=baseY-(i/5*plotH);
+let l=document.createElementNS('http://www.w3.org/2000/svg','line');
+l.setAttribute('class','grid-line');l.setAttribute('x1',PAD_L);l.setAttribute('y1',y);
+l.setAttribute('x2',PAD_L+plotW);l.setAttribute('y2',y);gridG.appendChild(l);
+
+let tl=document.createElementNS('http://www.w3.org/2000/svg','text');
+tl.setAttribute('class','y-left-label');tl.setAttribute('x',PAD_L-4);tl.setAttribute('y',y+2.5);
+tl.textContent=i*8;gridG.appendChild(tl);
+
+let tr=document.createElementNS('http://www.w3.org/2000/svg','text');
+tr.setAttribute('class','y-right-label');tr.setAttribute('x',PAD_L+plotW+4);tr.setAttribute('y',y+2.5);
+tr.textContent=i*4+'%';gridG.appendChild(tr);
+}
+
+// 左轴标题
+const yl=document.createElementNS('http://www.w3.org/2000/svg','text');
+yl.setAttribute('class','axis-label');yl.setAttribute('x',-baseY+plotH/2);yl.setAttribute('y',4);
+yl.setAttribute('transform','rotate(-90)');yl.textContent='高温天数（天）';
+document.getElementById('yAxisLeft').appendChild(yl);
+
+// 右轴标题
+const yr=document.createElementNS('http://www.w3.org/2000/svg','text');
+yr.setAttribute('class','axis-label');yr.setAttribute('x',-(baseY-plotH/2));yr.setAttribute('y',-294);
+yr.setAttribute('transform','rotate(-90)');yr.textContent='热射病病例同比增幅（%）';
+document.getElementById('yAxisRight').append(yr);
+
+// 绘制
+const barsG=document.getElementById('barsGroup');
+const ptsG=document.getElementById('pointsGroup');
+const xLabels=document.getElementById('xAxisLabels');
+const valueTags=document.getElementById('valueTags');
+
+let linePoints=[],areaPoints=[];
+
+DATA.forEach((d,i)=>{
+let cx=PAD_L+gap*(i+1)+barW*i+barW/2;
+let barH=(d.days/maxDays)*plotH;
+let ly=baseY-(d.growth/maxGrowth)*plotH;
+
+// ===== 鹤顶红圆角柱子 =====
+let bar=document.createElementNS('http://www.w3.org/2000/svg','rect');
+bar.setAttribute('class','bar-rect');
+bar.dataset.idx=i;
+bar.style.animationDelay=.06*i+'s';
+bar.setAttribute('x',cx-barW/2);
+bar.setAttribute('y',baseY-barH);
+bar.setAttribute('width',barW);
+bar.setAttribute('height',barH);
+bar.setAttribute('rx',barW*.22);
+bar.setAttribute('ry',barW*.22);
+bar.setAttribute('fill','url(#barGrad)');
+barsG.appendChild(bar);
+
+// ===== 漫画风格太阳数据点 =====
+linePoints.push(cx+','+ly);
+if(i===0){areaPoints.push((cx-10)+','+(baseY))}
+areaPoints.push(cx+','+ly);
+
+let sunG=document.createElementNS('http://www.w3.org/2000/svg','g');
+sunG.setAttribute('class','sun-dot');
+sunG.dataset.idx=i;
+sunG.style.animationDelay=(.48+.09*i)+'s';
+
+const sr=7.5;
+const raysData=[
+  {a:0,len:sr+5},{a:45,len:sr+7},{a:90,len:sr+4.5},
+  {a:135,len:sr+6},{a:180,len:sr+5.5},{a:225,len:sr+7},
+  {a:270,len:sr+5},{a:315,len:sr+6.5}
+];
+let raysHTML=raysData.map(r=>{
+  const rad=r.a*Math.PI/180;
+  return `<line x1="${cx+sr*Math.cos(rad)}" y1="${ly+sr*Math.sin(rad)}" x2="${cx+r.len*Math.cos(rad)}" y2="${ly+r.len*Math.sin(rad)}" stroke="#E65100" stroke-width="2.2" stroke-linecap="round"/>`;
+}).join('');
+
+sunG.innerHTML=`
+  ${raysHTML}
+  <circle cx="${cx}" cy="${ly}" r="${sr}" fill="url(#sunDotGrad)" stroke="#E65100" stroke-width="2" stroke-linejoin="round"/>
+`;
+ptsG.appendChild(sunG);
+
+// X轴标签
+let xt=document.createElementNS('http://www.w3.org/2000/svg','text');
+xt.setAttribute('class','axis-text');xt.setAttribute('x',cx);xt.setAttribute('y',10);
+xt.setAttribute('text-anchor','middle');xt.textContent=d.year;xLabels.appendChild(xt);
+
+// 值标签
+let vt1=document.createElementNS('http://www.w3.org/2000/svg','text');
+vt1.setAttribute('class','value-tag');vt1.setAttribute('id','vtDays'+i);
+vt1.setAttribute('fill','#C62828');vt1.setAttribute('x',cx);vt1.setAttribute('y',baseY-barH-7);
+vt1.setAttribute('text-anchor','middle');vt1.textContent=d.days+'天';valueTags.appendChild(vt1);
+
+let vt2=document.createElementNS('http://www.w3.org/2000/svg','text');
+vt2.setAttribute('class','value-tag');vt2.setAttribute('id','vtGrow'+i);
+vt2.setAttribute('fill','#E65100');vt2.setAttribute('x',cx);vt2.setAttribute('y',ly-17);
+vt2.setAttribute('text-anchor','middle');vt2.textContent='+'+d.growth+'%';valueTags.append(vt2);
+});
+
+areaPoints.push((PAD_L+plotW+10)+','+baseY);
+document.getElementById('areaPath').setAttribute('d','M'+areaPoints.join(' L'));
+document.getElementById('linePath').setAttribute('d','M'+linePoints.join(' L'));
+
+// 交互
+const tipBox=document.getElementById('tipBox'),tipTitle=document.getElementById('tipTitle');
+const tipRow1=document.getElementById('tipRow1'),tipRow2=document.getElementById('tipRow2');
+
+function showInfo(i){
+const d=DATA[i];tipTitle.textContent=d.year+' 年';
+tipRow1.innerHTML='16城平均高温天数：<span class="tip-val">'+d.days+' 天</span>';
+tipRow2.innerHTML='热射病病例增幅：<span class="tip-val">+'+d.growth+'%</span>';
+tipBox.classList.add('show');
+document.querySelectorAll('.bar-rect')[i].style.filter='brightness(1.2)';
+document.querySelectorAll('#vtDays'+i+',#vtGrow'+i).forEach(el=>el.classList.add('show'));
+}
+function hideInfo(){
+tipBox.classList.remove('show');
+document.querySelectorAll('.bar-rect').forEach(b=>b.style.filter='');
+document.querySelectorAll('.value-tag').forEach(v=>v.classList.remove('show'));
+}
+
+document.querySelectorAll('.bar-rect').forEach((b,i)=>{
+b.addEventListener('mouseenter',()=>showInfo(i));
+b.addEventListener('mouseleave',()=>hideInfo);
+b.addEventListener('click',()=>showInfo(i));
+});
+document.querySelectorAll('.sun-dot').forEach((g,i)=>{
+g.addEventListener('mouseenter',()=>showInfo(i));
+g.addEventListener('mouseleave',()=>hideInfo);
+g.addEventListener('click',()=>showInfo(i));
+});
+document.querySelector('.chart-wrap').addEventListener('mouseleave',hideInfo);
+</script>
+</body>
+</html>

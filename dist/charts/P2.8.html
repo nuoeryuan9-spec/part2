@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=397, height=560, initial-scale=1.0">
+<title>城市级劳动损失TOP8 - 交互数据可视化</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 397px;
+    height: 560px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 12px;
+    background: #transparent;
+  }
+  .title { font-size: 15px; font-weight: 500; color: #412402; }
+  .subtitle { font-size: 12px; color: #854F0B; }
+
+  .detail-panel {
+    display: none;
+    background:rgba(255,255,255,.85);
+    border-radius: 8px;
+    padding: 10px 12px;
+    border-left: 3px solid #D85A30;
+  }
+  .detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .detail-city { font-size: 14px; font-weight: 500; color: #4A1B0C; }
+  .detail-value { font-size: 16px; font-weight: 500; color: #D85A30; }
+  .detail-info { font-size: 11px; color: #993C1D; margin-top: 4px; line-height: 1.5; }
+
+  .chart-area {
+    position: relative;
+    flex: 1;
+  }
+
+  .footer {
+    font-size: 11px;
+    color: #888780;
+    text-align: center;
+    padding-top: 6px;
+  }
+</style>
+</head>
+<body>
+
+<div class="title">城市级劳动损失 TOP8</div>
+<div class="subtitle">工作小时损失（亿小时） · 点击柱状图查看详情</div>
+
+<div class="detail-panel" id="cityDetail">
+  <div class="detail-header">
+    <span class="detail-city" id="detailCity"></span>
+    <span class="detail-value" id="detailValue"></span>
+  </div>
+  <div class="detail-info" id="detailInfo"></div>
+</div>
+
+<div class="chart-area">
+  <canvas id="lossChart" role="img" aria-label="城市劳动损失TOP8柱状图">城市劳动损失TOP8柱状图</canvas>
+</div>
+
+<div class="footer">数据来源：Lancet Countdown 2024 中国报告（375城市数据）</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+var cityData = [
+  { name: '广州', value: 10.0 },
+  { name: '重庆', value: 9.0 },
+  { name: '北京', value: 7.2 },
+  { name: '上海', value: 6.8 },
+  { name: '深圳', value: 5.5 },
+  { name: '成都', value: 5.0 },
+  { name: '武汉', value: 4.5 },
+  { name: '杭州', value: 4.0 }
+];
+
+var total = 52.0;
+var avg = 6.5;
+
+var colors = ['#D85A30','#EF9F27','#BA7517','#F0997B','#D85A30','#EF9F27','#BA7517','#F0997B'];
+
+var ctx = document.getElementById('lossChart').getContext('2d');
+var lossChart = new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels: cityData.map(function(d) { return d.name; }),
+    datasets: [{
+      label: '工作小时损失',
+      data: cityData.map(function(d) { return d.value; }),
+      backgroundColor: colors,
+      borderRadius: 6,
+      barThickness: 28,
+      hoverBackgroundColor: '#993C1D'
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: 'transparent',
+        titleFont: { size: 13, weight: '500' },
+        bodyFont: { size: 12 },
+        displayColors: false,
+        callbacks: {
+          title: function(items) { return items[0].label + '（第' + (items[0].dataIndex + 1) + '名）'; },
+          label: function(ctx) { return '工作小时损失：' + ctx.parsed.y + ' 亿小时'; },
+          afterLabel: function(ctx) {
+            var pct = Math.round(ctx.parsed.y / total * 100);
+            return '占总损失：' + pct + '%';
+          }
+        }
+      }
+    },
+    scales: {
+      x: {
+        ticks: { font: { size: 11, weight: '400' }, color: '#854F0B' },
+        grid: { display: false }
+      },
+      y: {
+        min: 0,
+        max: 12,
+        ticks: {
+          stepSize: 2,
+          font: { size: 10 }, color: '#854F0B',
+          callback: function(v) { return v.toFixed(0); }
+        },
+        grid: { color: '#FAEEDA', drawBorder: false }
+      }
+    },
+    animation: {
+      duration: 800,
+      easing: 'easeOutQuart'
+    },
+    onClick: function(evt, elements) {
+      if (elements.length > 0) {
+        showDetail(elements[0].dataIndex);
+      } else {
+        hideDetail();
+      }
+    },
+    onHover: function(evt, elements) {
+      evt.native.target.style.cursor = elements.length > 0 ? 'pointer' : 'default';
+    }
+  }
+});
+
+function showDetail(idx) {
+  var c = cityData[idx];
+  var pct = Math.round(c.value / total * 100);
+  var diffFromAvg = (c.value - avg).toFixed(1);
+  var rank = idx + 1;
+
+  document.getElementById('detailCity').textContent = c.name + ' · 第' + rank + '名';
+  document.getElementById('detailValue').textContent = c.value.toFixed(1) + ' 亿小时';
+  document.getElementById('detailInfo').innerHTML =
+    '占比 ' + pct + '% · ' +
+    (diffFromAvg > 0 ? '高于平均值' : '低于平均值') +
+    ' <b>' + Math.abs(diffFromAvg) + '</b> 亿小时';
+  document.getElementById('cityDetail').style.display = 'block';
+}
+
+function hideDetail() {
+  document.getElementById('cityDetail').style.display = 'none';
+}
+</script>
+</body>
+</html>

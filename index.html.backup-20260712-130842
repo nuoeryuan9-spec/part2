@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f2c778">
+    <meta name="description" content="Spatial scrollytelling demo">
+    <title>Spatial Scrollytelling Demo</title>
+    <link rel="stylesheet" href="./style.css">
+    <script defer src="./main.js"></script>
+  </head>
+  <body class="cover-is-active">
+    <section class="opening-cover" data-opening-cover data-gif-duration="3880" aria-label="Opening cover">
+      <img class="opening-cover__gif" src="./assets/cover/开头.gif" alt="" aria-hidden="true" draggable="false">
+      <img class="opening-cover__last" src="./assets/cover/开头-last.png" alt="" aria-hidden="true" draggable="false">
+      <button class="gif-enter-hotspot" type="button" data-enter-button aria-label="进入下一个界面"></button>
+    </section>
+
+    <section class="opening-transition" data-opening-transition aria-label="过渡页面" hidden></section>
+
+    <div class="ambient-background" aria-hidden="true">
+      <span class="ambient-background__sun"></span>
+      <span class="ambient-background__heat"></span>
+      <span class="ambient-background__clouds"></span>
+    </div>
+
+    <section class="opening-story" data-opening-story aria-label="开头漫画（Opening Story）">
+      <div class="opening-story__inner">
+        <div class="opening-story__media" aria-hidden="true">
+          <img class="opening-story__panel opening-story__panel--1" src="./assets/开头漫画/开头漫画1.png" alt="" decoding="async" draggable="false">
+          <img class="opening-story__panel opening-story__panel--2" src="./assets/开头漫画/开头漫画2.png" alt="" decoding="async" draggable="false">
+          <img class="opening-story__panel opening-story__panel--3" src="./assets/开头漫画/开头漫画3.png" alt="" decoding="async" draggable="false">
+          <img class="opening-story__panel opening-story__panel--4" src="./assets/开头漫画/开头漫画4.png" alt="" decoding="async" draggable="false">
+          <img class="opening-story__panel opening-story__panel--5" src="./assets/开头漫画/开头漫画5.png" alt="" decoding="async" draggable="false">
+        </div>
+
+        <div class="opening-story__copy" aria-live="polite">
+          <p class="opening-story__text opening-story__text--1">2026年5月，小高像往常一样出门上班。</p>
+          <p class="opening-story__text opening-story__text--2">走出地铁站，热浪扑面而来。</p>
+          <p class="opening-story__text opening-story__text--3">这里先预留文字，后续我填写。</p>
+          <p class="opening-story__text opening-story__text--4">这里先预留文字，后续我填写。</p>
+          <p class="opening-story__text opening-story__text--5">这里先预留文字，后续我填写。</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="chapter2-health-economy" class="chapter2 chapter2-opening" data-chapter2-intro aria-label="第二章：从健康风险到经济代价">
+      <div class="chapter2-opening__sticky">
+        <h2 class="chapter2-opening__title">从健康风险到经济代价</h2>
+        <div class="chapter2-opening__chart" aria-label="P2.1 图表">
+          <iframe class="chapter2-chart-iframe chapter2-chart-iframe--p21" src="./charts/P2.1.html" title="P2.1 图表" loading="lazy" scrolling="no"></iframe>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter2 li-story" data-li-story aria-label="李师傅滚动叙事">
+      <div class="li-story__world">
+        <div class="li-story__route" aria-hidden="true">
+          <img class="li-story__route-svg" src="./assets/road/柏油路1.svg" alt="" decoding="async" draggable="false">
+        </div>
+
+        <section class="li-story__step li-story__step--ride" data-li-step="0">
+          <div class="li-story__character li-story__character--ride is-active" data-li-frame="0">
+            <img class="li-story__image" src="./assets/part2/图2.png" alt="" decoding="async" draggable="false">
+          </div>
+        </section>
+
+        <section class="li-story__step li-story__step--run" data-li-step="1">
+          <div class="li-story__character li-story__character--run" data-li-frame="1">
+            <img class="li-story__image" src="./assets/part2/图3.png" alt="" decoding="async" draggable="false">
+          </div>
+          <p class="li-story__item li-story__text" data-li-copy="1">2024 年 7 月 16 日，上海浦东，连续第 15 个高温日，午后 2 点的实时气温达 40.2℃，地面温度突破 58℃。</p>
+        </section>
+
+        <section class="li-story__step li-story__step--rest" data-li-step="2">
+          <div class="li-story__character li-story__character--rest" data-li-frame="2">
+            <img class="li-story__image" src="./assets/part2/图4.png" alt="" decoding="async" draggable="false">
+          </div>
+          <p class="li-story__item li-story__text" data-li-copy="2">42 岁的外卖员李师傅刚送完一份写字楼订单，在路边树荫下短暂休息——他当天已配送 23 单，衣服被汗水浸透，紧紧贴在背上。同事后来回忆，李师傅当时还笑着说“再送两单就去买冰西瓜”，可话音刚落......</p>
+        </section>
+
+        <section class="li-story__step li-story__step--chest" data-li-step="3">
+          <div class="li-story__character li-story__character--chest" data-li-frame="3">
+            <img class="li-story__image" src="./assets/part2/图5.png" alt="" decoding="async" draggable="false">
+          </div>
+          <p class="li-story__item li-story__text" data-li-copy="3">他就突然捂住胸口，身体缓缓倒在电动车旁。路人紧急拨打 120，送医时李师傅的核心体温已达 41.8℃，确诊为劳力型热射病，虽经 6 小时抢救，最终还是因多器官衰竭离世。他的电动车筐里，还放着下一单待配送的生鲜。</p>
+        </section>
+
+        <section class="li-story__step li-story__step--fall" data-li-step="4">
+          <div class="li-story__character li-story__character--fall" data-li-frame="4">
+            <img class="li-story__image" src="./assets/part2/图6.png" alt="" decoding="async" draggable="false">
+          </div>
+
+          <div class="li-story__item li-story__final-panel li-story__final-panel--p22" data-li-copy="4" aria-label="P2.2 图表">
+            <iframe class="chapter2-chart-iframe chapter2-chart-iframe--p22" src="./charts/P2.2(1).html" title="P2.2 图表" loading="lazy" scrolling="no"></iframe>
+          </div>
+        </section>
+      </div>
+
+      <section class="li-story__lead-section" aria-label="热射病导语">
+        <div class="li-story__lead-content">
+          <p class="lead-line lead-line--one">李师傅的悲剧，让“热射病”再次走进公众视野。</p>
+          <p class="lead-line lead-line--two">但很多人不知道。</p>
+          <p class="lead-line lead-line--three">热射病从来不是只有高强度户外劳动者才会遇到的风险。</p>
+        </div>
+      </section>
+
+      <section class="li-story__p23-section" data-li-p23-section aria-label="P2.3 热射病患者类型">
+        <div class="li-story__p23-panel">
+          <p class="li-story__p23-copy">2018–2023 年我国累计报告热射病病例 <span>86406</span> 例，其中非劳力型患者占比达 <span>32.02%</span>。非劳力型患者中，60 岁以上老人占比超 <span>55%</span>——他们的体温调节能力随年龄衰退，当室内温度超过 <span>32℃</span>，身体就可能失去“散热平衡”。</p>
+          <div class="li-story__p23-chart" aria-label="P2.3 图表">
+            <iframe class="chapter2-chart-iframe chapter2-chart-iframe--p23" src="./charts/P2.3.html" title="P2.3 图表" loading="lazy" scrolling="no"></iframe>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <main class="scrolly-demo" aria-label="Spatial scrollytelling demo">
+      <div class="stage" data-stage>
+        <div class="progress-ribbon" aria-hidden="true">
+          <span></span>
+        </div>
+
+        <div class="wayfinder" aria-hidden="true">
+          <span class="is-active"></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+
+        <div class="world" id="world" aria-hidden="true">
+          <section
+            class="scene scene--gate"
+            data-point="0"
+            style="--scene-x: 0px; --scene-y: 0px; --scene-z: 0px; --scene-rx: 0deg; --scene-ry: 0deg; --scene-rz: 0deg;"
+          >
+            <div class="layer sun-disc" data-depth="0.18" style="--base-x: 29vw; --base-y: -28vh; --base-z: -520px;"></div>
+            <div class="layer cloud cloud--a" data-depth="0.28" style="--base-x: -38vw; --base-y: -25vh; --base-z: -430px;"></div>
+            <div class="layer cloud cloud--b" data-depth="0.38" style="--base-x: 36vw; --base-y: -8vh; --base-z: -360px;"></div>
+            <div class="layer mountain mountain--wide" data-depth="0.48" style="--base-x: -6vw; --base-y: 11vh; --base-z: -310px; --rz: -2deg;"></div>
+            <div class="layer mountain mountain--front" data-depth="0.58" style="--base-x: 24vw; --base-y: 20vh; --base-z: -190px; --rz: 3deg;"></div>
+            <div class="layer portal-ring" data-depth="0.82" style="--base-x: 0px; --base-y: 0px; --base-z: -40px;"></div>
+            <div class="layer path-ribbon" data-depth="1.05" style="--base-x: -5vw; --base-y: 30vh; --base-z: 65px; --rx: 68deg; --rz: -8deg;"></div>
+            <div class="layer paper-card card--first" data-depth="1.18" style="--base-x: -32vw; --base-y: 3vh; --base-z: 160px; --ry: 14deg; --rz: -11deg;">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+            <div class="layer character-placeholder character--gate" data-depth="1.36" style="--base-x: 14vw; --base-y: 19vh; --base-z: 220px;">
+              <i class="head"></i>
+              <i class="torso"></i>
+              <i class="arm arm--left"></i>
+              <i class="arm arm--right"></i>
+              <i class="leg leg--left"></i>
+              <i class="leg leg--right"></i>
+            </div>
+          </section>
+
+          <section
+            class="scene scene--canyon"
+            data-point="0.23"
+            style="--scene-x: -430px; --scene-y: 28px; --scene-z: -1120px; --scene-rx: 0deg; --scene-ry: -11deg; --scene-rz: 2deg;"
+          >
+            <div class="layer cloud cloud--c" data-depth="0.22" style="--base-x: -26vw; --base-y: -27vh; --base-z: -420px;"></div>
+            <div class="layer cliff cliff--left" data-depth="0.62" style="--base-x: -32vw; --base-y: 9vh; --base-z: -210px; --ry: 8deg;"></div>
+            <div class="layer cliff cliff--right" data-depth="0.68" style="--base-x: 31vw; --base-y: 8vh; --base-z: -180px; --ry: -8deg;"></div>
+            <div class="layer bridge-strip" data-depth="0.98" style="--base-x: 0px; --base-y: 27vh; --base-z: 70px; --rx: 71deg; --rz: 4deg;"></div>
+            <div class="layer text-slate slate--left" data-depth="1.08" style="--base-x: -18vw; --base-y: -2vh; --base-z: 150px; --ry: 18deg; --rz: -7deg;">
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+            <div class="layer paper-card card--second" data-depth="1.2" style="--base-x: 22vw; --base-y: -8vh; --base-z: 190px; --ry: -15deg; --rz: 9deg;">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+            <div class="layer character-placeholder character--small" data-depth="1.34" style="--base-x: 0vw; --base-y: 19vh; --base-z: 260px;">
+              <i class="head"></i>
+              <i class="torso"></i>
+              <i class="arm arm--left"></i>
+              <i class="arm arm--right"></i>
+              <i class="leg leg--left"></i>
+              <i class="leg leg--right"></i>
+            </div>
+          </section>
+
+          <section
+            class="scene scene--orbit"
+            data-point="0.47"
+            style="--scene-x: 440px; --scene-y: -34px; --scene-z: -2280px; --scene-rx: 2deg; --scene-ry: 13deg; --scene-rz: -3deg;"
+          >
+            <div class="layer moon-plate" data-depth="0.32" style="--base-x: -34vw; --base-y: -18vh; --base-z: -390px;"></div>
+            <div class="layer orbit-rings" data-depth="0.78" style="--base-x: 0px; --base-y: 3vh; --base-z: -70px; --rx: 64deg;"></div>
+            <div class="layer frame-shell frame--future" data-depth="1.06" style="--base-x: -17vw; --base-y: 3vh; --base-z: 150px; --ry: 20deg; --rz: -4deg;">
+              <span class="slot slot--a"></span>
+              <span class="slot slot--b"></span>
+              <span class="slot slot--c"></span>
+            </div>
+            <div class="layer page-arc" data-depth="1.18" style="--base-x: 24vw; --base-y: -9vh; --base-z: 210px; --ry: -22deg; --rz: 11deg;"></div>
+            <div class="layer character-placeholder character--orbit" data-depth="1.42" style="--base-x: 11vw; --base-y: 18vh; --base-z: 310px;">
+              <i class="head"></i>
+              <i class="torso"></i>
+              <i class="arm arm--left"></i>
+              <i class="arm arm--right"></i>
+              <i class="leg leg--left"></i>
+              <i class="leg leg--right"></i>
+            </div>
+          </section>
+
+          <section
+            class="scene scene--cabinet"
+            data-point="0.72"
+            style="--scene-x: -180px; --scene-y: 44px; --scene-z: -3480px; --scene-rx: -2deg; --scene-ry: -8deg; --scene-rz: 2deg;"
+          >
+            <div class="layer cloud cloud--d" data-depth="0.22" style="--base-x: 32vw; --base-y: -26vh; --base-z: -470px;"></div>
+            <div class="layer shelf shelf--back" data-depth="0.58" style="--base-x: 0px; --base-y: 0px; --base-z: -260px; --rx: 2deg;"></div>
+            <div class="layer folded-map map--one" data-depth="0.9" style="--base-x: -27vw; --base-y: -5vh; --base-z: 40px; --ry: 24deg; --rz: -8deg;"></div>
+            <div class="layer folded-map map--two" data-depth="1.05" style="--base-x: 19vw; --base-y: 3vh; --base-z: 120px; --ry: -18deg; --rz: 8deg;"></div>
+            <div class="layer text-slate slate--right" data-depth="1.18" style="--base-x: 2vw; --base-y: -16vh; --base-z: 230px; --rx: -4deg; --rz: 2deg;">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+            <div class="layer character-placeholder character--cabinet" data-depth="1.38" style="--base-x: -7vw; --base-y: 24vh; --base-z: 310px;">
+              <i class="head"></i>
+              <i class="torso"></i>
+              <i class="arm arm--left"></i>
+              <i class="arm arm--right"></i>
+              <i class="leg leg--left"></i>
+              <i class="leg leg--right"></i>
+            </div>
+          </section>
+
+          <section
+            class="scene scene--horizon"
+            data-point="0.94"
+            style="--scene-x: 0px; --scene-y: -42px; --scene-z: -4660px; --scene-rx: 0deg; --scene-ry: 0deg; --scene-rz: 0deg;"
+          >
+            <div class="layer sun-disc sun-disc--low" data-depth="0.18" style="--base-x: 0px; --base-y: -24vh; --base-z: -560px;"></div>
+            <div class="layer mountain mountain--final-a" data-depth="0.42" style="--base-x: -22vw; --base-y: 10vh; --base-z: -330px; --rz: -2deg;"></div>
+            <div class="layer mountain mountain--final-b" data-depth="0.52" style="--base-x: 25vw; --base-y: 13vh; --base-z: -260px; --rz: 3deg;"></div>
+            <div class="layer door-page door--left" data-depth="0.92" style="--base-x: -16vw; --base-y: 1vh; --base-z: 40px; --ry: 24deg; --rz: -3deg;"></div>
+            <div class="layer door-page door--right" data-depth="0.92" style="--base-x: 16vw; --base-y: 1vh; --base-z: 42px; --ry: -24deg; --rz: 3deg;"></div>
+            <div class="layer path-ribbon path-ribbon--final" data-depth="1.14" style="--base-x: 0px; --base-y: 31vh; --base-z: 180px; --rx: 72deg;"></div>
+            <div class="layer character-placeholder character--final" data-depth="1.34" style="--base-x: 0px; --base-y: 20vh; --base-z: 330px;">
+              <i class="head"></i>
+              <i class="torso"></i>
+              <i class="arm arm--left"></i>
+              <i class="arm arm--right"></i>
+              <i class="leg leg--left"></i>
+              <i class="leg leg--right"></i>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

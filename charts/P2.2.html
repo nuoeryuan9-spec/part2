@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>上海高温天气 - 东方明珠</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html {
+    background: transparent;
+  }
+
+  body {
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+    overflow-x: hidden;
+  }
+
+  .title {
+    font-size: clamp(16px, 3vw, 28px);
+    font-weight: 800;
+    color: #D2691E;
+    letter-spacing: 4px;
+    margin-bottom: 8px;
+    text-shadow: 2px 2px 4px rgba(210,105,30,0.15);
+  }
+
+  .subtitle {
+    font-size: 14px;
+    color: #A0522D;
+    margin-bottom: 40px;
+    font-weight: 500;
+  }
+
+  .chart-container {
+    width: 50%;
+    max-width: 1000px;
+    position: relative;
+    padding-bottom: 60px;
+  }
+
+  .bars-wrapper {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: clamp(8px, 2vw, 24px);
+    height: 240px;
+    padding: 0 10px;
+    position: relative;
+  }
+
+  /* 年份行 —— 独立于柱子，保证文字永不遮挡 */
+  .years-row {
+    display: flex;
+    justify-content: center;
+    gap: clamp(8px, 2vw, 24px);
+    padding: 0 10px;
+    margin-top: 10px;
+  }
+
+  .year-item {
+    flex: 1;
+    max-width: 100px;
+    text-align: center;
+  }
+
+  .year-item .year-label {
+    font-size: clamp(11px, 1.8vw, 15px);
+    font-weight: 600;
+    color: #8B4513;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .year-item:hover .year-label {
+    color: #D2691E;
+    transform: scale(1.08);
+  }
+
+  /* 地面线 */
+  .ground-line {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #CD853F, transparent);
+    border-radius: 2px;
+  }
+
+  .bar-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+    flex: 1;
+    max-width: 100px;
+  }
+
+  .bar-item:hover {
+    transform: translateY(-12px) scale(1.06);
+  }
+
+  .bar-item:hover .pearl-tower {
+    filter: brightness(1.15) drop-shadow(0 8px 20px rgba(255,99,41,0.45));
+  }
+
+  .tower-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    transition: all 0.35s ease;
+  }
+
+  .pearl-tower {
+    transition: all 0.35s ease;
+    filter: drop-shadow(0 4px 12px rgba(205,92,30,0.25));
+  }
+
+  .value-label {
+    font-size: clamp(12px, 2vw, 16px);
+    font-weight: 700;
+    color: #CC5500;
+    margin-top: 6px;
+    opacity: 0;
+    transform: translateY(-8px);
+    transition: all 0.3s ease;
+    text-shadow: 0 1px 2px rgba(204,85,0,0.1);
+  }
+
+  .bar-item:hover .value-label,
+  .bar-item.active .value-label {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* 信息面板 */
+  .info-panel {
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 2px solid rgba(244, 164, 96, 0.7);
+    border-radius: 16px;
+    padding: 24px 36px;
+    margin-top: 32px;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(210,105,30,0.12);
+    min-height: 90px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.4s ease;
+    max-width: 520px;
+    width: 90%;
+  }
+
+  .info-panel.highlight {
+    border-color: #FF7F24;
+    box-shadow: 0 12px 40px rgba(255,127,36,0.22);
+  }
+
+  .info-panel .panel-year {
+    font-size: 26px;
+    font-weight: 800;
+    color: #E07000;
+    margin-bottom: 6px;
+  }
+
+  .info-panel .panel-days {
+    font-size: 42px;
+    font-weight: 900;
+    color: #FF6B1A;
+    line-height: 1.2;
+  }
+
+  .info-panel .panel-unit {
+    font-size: 16px;
+    color: #A0522D;
+    font-weight: 500;
+  }
+
+  .info-panel .panel-hint {
+    font-size: 14px;
+    color: #B8860B;
+    margin-top: 4px;
+  }
+
+  /* 图例 */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px 24px;
+    margin-top: 28px;
+    max-width: 800px;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #8B4513;
+    cursor: pointer;
+    padding: 6px 12px;
+    border-radius: 20px;
+    transition: all 0.25s ease;
+  }
+
+  .legend-item:hover {
+    background: rgba(255,165,79,0.15);
+  }
+
+  .legend-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #FF7F24, #FF4500);
+  }
+
+  .source-note {
+    margin-top: 30px;
+    font-size: 13px;
+    color: #A0826D;
+    font-style: italic;
+  }
+
+  /* 动画 */
+  @keyframes towerRise {
+    from {
+      opacity: 0;
+      transform: translateY(40px) scale(0.7);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  .bar-item {
+    animation: towerRise 0.65s ease-out backwards;
+  }
+
+  .bar-item:nth-child(1) { animation-delay: 0.05s; }
+  .bar-item:nth-child(2) { animation-delay: 0.15s; }
+  .bar-item:nth-child(3) { animation-delay: 0.25s; }
+  .bar-item:nth-child(4) { animation-delay: 0.35s; }
+  .bar-item:nth-child(5) { animation-delay: 0.45s; }
+  .bar-item:nth-child(6) { animation-delay: 0.55s; }
+  .bar-item:nth-child(7) { animation-delay: 0.65s; }
+
+  /* 响应式 */
+  @media (max-width: 600px) {
+    .bars-wrapper { height: 200px; gap: 4px; }
+    .years-row { gap: 4px; }
+    body { padding: 24px 12px; }
+    .info-panel { padding: 16px 20px; }
+    .info-panel .panel-days { font-size: 32px; }
+  }
+</style>
+</head>
+<body>
+
+<h1 class="title">上海高温天气</h1>
+<p class="subtitle">单位：天（日最高气温 ≥ 35°C）</p>
+
+<div class="chart-container">
+  <div class="bars-wrapper" id="barsWrapper">
+    <div class="ground-line"></div>
+  </div>
+  <div class="years-row" id="yearsRow"></div>
+</div>
+
+<div class="info-panel" id="infoPanel">
+  <div class="panel-hint">👆 悬停或点击东方明珠查看详情</div>
+</div>
+
+<div class="legend" id="legend"></div>
+
+<p class="source-note">数据来源：《中国 16 城市年高温天数统计.csv》</p>
+
+<script>
+// 上海高温天数数据
+const data = [
+  { year: 2025, days: 33 },
+  { year: 2024, days: 42 },
+  { year: 2023, days: 17 },
+  { year: 2022, days: 45 },
+  { year: 2021, days: 15 },
+  { year: 2020, days: 24 },
+  { year: 2019, days: 18 },
+];
+
+const maxDays = Math.max(...data.map(d => d.days));
+const maxHeight = 200; // 最大高度(px)
+const baseHeight = 35;  // 最小高度(px)
+
+// 生成东方明珠塔SVG
+function createPearlTower(days, index) {
+  const heightRatio = baseHeight + (days / maxDays) * (maxHeight - baseHeight);
+  const scale = heightRatio / 300; // 基准缩放
+
+  // 暖色渐变色系 - 按数值深浅变化
+  const intensity = Math.round((days / maxDays) * 70 + 30); // 30~100
+  const r = 255;
+  const g = Math.round(140 - (days / maxDays) * 80);
+  const b = Math.round(50 - (days / maxDays) * 30);
+  const mainColor = `rgb(${r},${g},${b})`;
+  const darkColor = `rgb(${Math.min(255,r+20)},${Math.max(0,g-40)},${Math.max(0,b-20)})`;
+  const lightColor = `rgb(${255},${Math.min(255,g+60)},${Math.min(255,b+80)})`;
+
+  const svg = `
+    <svg class="pearl-tower" width="${Math.round(90 * scale)}" height="${Math.round(heightRatio)}" viewBox="0 0 90 320" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="towerGrad${index}" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" style="stop-color:${darkColor}"/>
+          <stop offset="35%" style="stop-color:${mainColor}"/>
+          <stop offset="65%" style="stop-color:${lightColor}"/>
+          <stop offset="100%" style="stop-color:${darkColor}"/>
+        </linearGradient>
+        <linearGradient id="sphereGrad${index}" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color:${lightColor}"/>
+          <stop offset="50%" style="stop-color:${mainColor}"/>
+          <stop offset="100%" style="stop-color:${darkColor}"/>
+        </linearGradient>
+        <radialGradient id="sphereRadial${index}" cx="35%" cy="30%" r="60%">
+          <stop offset="0%" style="stop-color:${lightColor};stop-opacity:0.9"/>
+          <stop offset="70%" style="stop-color:${mainColor}"/>
+          <stop offset="100%" style="stop-color:${darkColor}"/>
+        </radialGradient>
+        <!-- 发光效果 -->
+        <filter id="glow${index}">
+          <feGaussianBlur stdDeviation="2.5" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+
+      <!-- 天线 -->
+      <line x1="45" y1="0" x2="45" y2="22" stroke="${darkColor}" stroke-width="2.5" stroke-linecap="round"/>
+      <circle cx="45" cy="3" r="3" fill="${lightColor}" filter="url(#glow${index})"/>
+
+      <!-- 上球体支架 -->
+      <polygon points="42,22 38,52 52,52 48,22" fill="url(#towerGrad${index})"/>
+
+      <!-- 上球体 -->
+      <ellipse cx="45" cy="62" rx="22" ry="22" fill="url(#sphereRadial${index})" filter="url(#glow${index})"/>
+      <ellipse cx="39" cy="54" rx="7" ry="5" fill="${lightColor}" opacity="0.4"/>
+
+      <!-- 连接柱上段 -->
+      <path d="M36,82 L33,138 L57,138 L54,82 Z" fill="url(#towerGrad${index})"/>
+
+      <!-- 下球体 -->
+      <ellipse cx="45" cy="158" rx="30" ry="30" fill="url(#sphereRadial${index})" filter="url(#glow${index})"/>
+      <ellipse cx="37" cy="146" rx="10" ry="7" fill="${lightColor}" opacity="0.4"/>
+
+      <!-- 下球体到基座的过渡 -->
+      <path d="M27,184 L23,230 L67,230 L63,184 Z" fill="url(#towerGrad${index})"/>
+
+      <!-- 基座装饰环 -->
+      <rect x="21" y="228" width="48" height="8" rx="2" fill="${darkColor}"/>
+
+      <!-- 主塔身/基座 -->
+      <path d="M18,235 L14,310 L76,310 L72,235 Z" fill="url(#towerGrad${index})"/>
+
+      <!-- 基座底线 -->
+      <rect x="12" y="308" width="66" height="6" rx="2" fill="${darkColor}" opacity="0.8"/>
+
+      <!-- 三根斜撑柱（简化） -->
+      <line x1="22" y1="240" x2="8" y2="316" stroke="${darkColor}" stroke-width="2.5" opacity="0.6"/>
+      <line x1="68" y1="240" x2="82" y2="316" stroke="${darkColor}" stroke-width="2.5" opacity="0.6"/>
+      <line x1="45" y1="245" x2="45" y2="318" stroke="${darkColor}" stroke-width="2" opacity="0.5"/>
+    </svg>
+  `;
+
+  return svg;
+}
+
+// 渲染图表
+const wrapper = document.getElementById('barsWrapper');
+const yearsRow = document.getElementById('yearsRow');
+const legend = document.getElementById('legend');
+const infoPanel = document.getElementById('infoPanel');
+
+data.forEach((item, index) => {
+  const barItem = document.createElement('div');
+  barItem.className = 'bar-item';
+  barItem.dataset.year = item.year;
+  barItem.dataset.days = item.days;
+
+  const svgHtml = createPearlTower(item.days, index);
+
+  barItem.innerHTML = `
+    <div class="tower-container">
+      ${svgHtml}
+      <span class="value-label">${item.days}</span>
+    </div>
+  `;
+
+  // 交互事件
+  barItem.addEventListener('mouseenter', () => showInfo(item));
+  barItem.addEventListener('click', () => showInfo(item, true));
+
+  wrapper.appendChild(barItem);
+
+  // 年份标签行
+  const yearItem = document.createElement('div');
+  yearItem.className = 'year-item';
+  yearItem.innerHTML = `<span class="year-label">${item.year}</span>`;
+  yearItem.addEventListener('mouseenter', () => showInfo(item));
+  yearsRow.appendChild(yearItem);
+
+  // 图例项
+  const legendItem = document.createElement('div');
+  legendItem.className = 'legend-item';
+  legendItem.innerHTML = `<span class="legend-dot"></span> ${item.year}`;
+  legendItem.addEventListener('mouseenter', () => showInfo(item));
+  legendItem.addEventListener('click', () => {
+    showInfo(item, true);
+    document.querySelectorAll('.bar-item').forEach(el => el.classList.remove('active'));
+    barItem.classList.add('active');
+  });
+  legend.appendChild(legendItem);
+});
+
+function showInfo(item, highlight = false) {
+  infoPanel.innerHTML = `
+    <div class="panel-year">${item.year} 年</div>
+    <div class="panel-days">${item.days}<span class="panel-unit"> 天</span></div>
+    <div class="panel-hint">高温天数占比：${(item.days / 365 * 100).toFixed(1)}%</div>
+  `;
+  if (highlight) {
+    infoPanel.classList.add('highlight');
+    setTimeout(() => infoPanel.classList.remove('highlight'), 400);
+  }
+}
+
+// 点击空白区域重置
+wrapper.addEventListener('mouseleave', () => {
+  infoPanel.innerHTML = '<div class="panel-hint">👆 悬停或点击东方明珠查看详情</div>';
+});
+</script>
+</body>
+</html>
