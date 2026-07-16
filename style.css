@@ -487,8 +487,8 @@ body::selection {
   border: none;
   background: transparent;
   pointer-events: auto;
-  transform: translate(10px,-12px) scale(1.03);
-  transform-origin: top left;
+  transform: translate(10px,-12px) scale(0.96);
+  transform-origin: center top;
   z-index: 2;
 }
 
