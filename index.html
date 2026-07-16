@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f2c778">
+    <meta name="description" content="Spatial scrollytelling demo">
+    <title>Spatial Scrollytelling Demo</title>
+    <link rel="stylesheet" href="./style.css">
+    <style id="p28-iframe-display-overrides">
+      /* P2.8 only: give the complete chart a larger, centered left-column viewport. */
+      .scene--canyon .economy-step--2 {
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+      }
+
+      .scene--canyon .economy-step--2 .chart-container {
+        width: 105%;
+        height: min(74svh, 680px);
+        justify-self: start;
+        margin-left: clamp(16vw, 17vw, 18vw);
+        overflow: hidden;
+        pointer-events: auto;
+      }
+
+      .scene--canyon .economy-step--2 .chart-container iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 360%;
+        height: 360%;
+        border: none;
+        background: transparent;
+        transform: scale(0.42);
+        transform-origin: top left;
+        pointer-events: auto;
+        overflow: hidden;
+      }
+
+      @media (max-width: 760px) {
+        .scene--canyon .economy-step--2 .chart-container {
+          width: 102%;
+          height: min(72svh, 620px);
+          margin-left: 14vw;
+        }
+
+        .scene--canyon .economy-step--2 .chart-container iframe {
+          width: 360%;
+          height: 360%;
+          transform: scale(0.39);
+          transform-origin: top left;
+        }
+      }
+    </style>
+    <script defer src="./main.js"></script>
+  </head>
+  <body class="cover-is-active">
+    <section class="opening-cover" data-opening-cover data-gif-duration="3880" aria-label="Opening cover">
+      <img class="opening-cover__gif" src="./assets/cover/开头.gif" alt="" aria-hidden="true" draggable="false">
+      <img class="opening-cover__last" src="./assets/cover/开头-last.png" alt="" aria-hidden="true" draggable="false">
+      <button class="gif-enter-hotspot" type="button" data-enter-button aria-label="进入下一个界面"></button>
+    </section>
+
+    <section class="opening-transition" data-opening-transition aria-label="过渡页面" hidden></section>
+
+    <main id="chapter2" class="chapter2-scroll" data-chapter2-state="entry">
+      <div class="chapter2-entry-backdrop" aria-hidden="true">
+        <div class="chapter2-entry-backdrop__sky"></div>
+        <div class="chapter2-entry-backdrop__sun">
+          <img src="./assets/part2/太阳.png" alt="" draggable="false">
+        </div>
+        <div class="chapter2-entry-backdrop__base-mountain">
+          <img src="./assets/part2/底层山脉.png" alt="" draggable="false">
+        </div>
+        <div class="chapter2-entry-backdrop__cloud chapter2-entry-backdrop__cloud--near-left">
+          <img src="./assets/part2/近景云.png" alt="" draggable="false">
+        </div>
+        <div class="chapter2-entry-backdrop__cloud chapter2-entry-backdrop__cloud--near-right">
+          <img src="./assets/part2/近景云.png" alt="" draggable="false">
+        </div>
+        <div class="chapter2-entry-backdrop__cloud chapter2-entry-backdrop__cloud--mid-left">
+          <img src="./assets/part2/中景云.png" alt="" draggable="false">
+        </div>
+        <div class="chapter2-entry-backdrop__cloud chapter2-entry-backdrop__cloud--mid-center">
+          <img src="./assets/part2/中景云.png" alt="" draggable="false">
+        </div>
+        <div class="chapter2-entry-backdrop__cloud chapter2-entry-backdrop__cloud--mid-right">
+          <img src="./assets/part2/中景云.png" alt="" draggable="false">
+        </div>
+        <div class="chapter2-entry-backdrop__mountain chapter2-entry-backdrop__mountain--1">
+          <img src="./assets/part2/前景山脉1.png" alt="" draggable="false">
+        </div>
+        <div class="chapter2-entry-backdrop__mountain chapter2-entry-backdrop__mountain--2">
+          <img src="./assets/part2/前景山脉2.png" alt="" draggable="false">
+        </div>
+        <div class="chapter2-entry-backdrop__mountain chapter2-entry-backdrop__mountain--3">
+          <img src="./assets/part2/前景山脉3.png" alt="" draggable="false">
+        </div>
+        <div class="chapter2-entry-backdrop__mountain chapter2-entry-backdrop__mountain--4">
+          <img src="./assets/part2/前景山脉4.png" alt="" draggable="false">
+        </div>
+      </div>
+      <section id="chapter2-entry" class="chapter2-title-screen" data-first-content data-chapter2-entry aria-label="第二章标题">
+        <div class="chapter2-entry__title-stack" aria-label="从健康风险到经济代价">
+          <img class="chapter2-entry__title-image chapter2-entry__title-image--1" src="./assets/part2/大标题1.png" alt="大标题一" decoding="async" draggable="false">
+      <img class="chapter2-entry__title-image chapter2-entry__title-image--2" src="./assets/part2/大标题2-transparent.png" alt="大标题二" decoding="async" draggable="false">
+          <img class="chapter2-entry__title-image chapter2-entry__title-image--3" src="./assets/part2/大标题3.png" alt="大标题三" decoding="async" draggable="false">
+        </div>
+      </section>
+
+      <section class="chapter2-entry-screen" aria-label="第二章分区入口">
+        <p class="chapter2-entry__hint">点击下方标题，进入对应章节</p>
+        <nav class="chapter2-entry__nav" aria-label="第二章分层导航">
+          <button class="chapter2-entry__link chapter2-entry__link--body" type="button" data-chapter2-target="body-signals" aria-label="身体无声的讯息">
+            <span class="chapter2-entry__title-card title-card">
+              <img src="./assets/part2/nav-body-signals.png" alt="身体无声的讯息" decoding="async" draggable="false">
+            </span>
+          </button>
+          <button class="chapter2-entry__link chapter2-entry__link--life" type="button" data-chapter2-target="life-warning" aria-label="生命告急？">
+            <span class="chapter2-entry__title-card title-card">
+              <img src="./assets/part2/nav-life-warning.png" alt="生命告急？" decoding="async" draggable="false">
+            </span>
+          </button>
+          <button class="chapter2-entry__link chapter2-entry__link--economy" type="button" data-chapter2-target="economic-cost" aria-label="被高温蒸发的 GDP，还有高温点燃的城市电网">
+            <span class="chapter2-entry__title-card title-card title-card--economy">
+              <img src="./assets/part2/nav-economic-cost.png" alt="被高温“蒸发”的GDP，还有高温“点燃”的城市电网" decoding="async" draggable="false">
+            </span>
+          </button>
+        </nav>
+      </section>
+
+      <a class="chapter2-return" href="#chapter2-entry" data-chapter2-return>返回章节入口</a>
+
+      <div class="chapter2-content" data-chapter2-content>
+        <div class="ambient-background" aria-hidden="true">
+          <span class="ambient-background__sun"></span>
+          <span class="ambient-background__heat"></span>
+          <span class="ambient-background__clouds"></span>
+        </div>
+
+      <section id="chapter2-body-signals" class="chapter2 chapter2-opening chapter2-body-signals" data-reveal aria-label="身体无声的讯息">
+        <div class="chapter2-opening__sticky">
+        <div class="chapter2-opening__chart" aria-label="P2.1 图表">
+          <iframe class="chapter2-chart-iframe chapter2-chart-iframe--p21" src="./charts/P2.1.html" title="P2.1 图表" loading="lazy" scrolling="no"></iframe>
+        </div>
+      </div>
+    </section>
+
+    <section id="chapter2-life-warning" class="chapter2 li-story" data-li-story aria-label="李师傅滚动叙事">
+      <div class="li-story__world">
+        <div class="li-story__route" aria-hidden="true">
+          <img class="li-story__route-svg" src="./assets/road/柏油路1.svg" alt="" decoding="async" draggable="false">
+        </div>
+
+        <section class="li-story__step li-story__step--ride" data-li-step="0">
+          <div class="li-story__character li-story__character--ride is-active" data-li-frame="0">
+            <img class="li-story__image" src="./assets/part2/图2.png" alt="" decoding="async" draggable="false">
+          </div>
+        </section>
+
+        <section class="li-story__step li-story__step--run" data-li-step="1">
+          <div class="li-story__character li-story__character--run" data-li-frame="1">
+            <img class="li-story__image" src="./assets/part2/图3.png" alt="" decoding="async" draggable="false">
+          </div>
+          <p class="li-story__item li-story__text" data-li-copy="1">2024 年 7 月 16 日，上海浦东，连续第 15 个高温日，午后 2 点的实时气温达 40.2℃，地面温度突破 58℃。</p>
+        </section>
+
+        <section class="li-story__step li-story__step--rest" data-li-step="2">
+          <div class="li-story__character li-story__character--rest" data-li-frame="2">
+            <img class="li-story__image" src="./assets/part2/图4.png" alt="" decoding="async" draggable="false">
+          </div>
+          <p class="li-story__item li-story__text" data-li-copy="2">42 岁的外卖员李师傅刚送完一份写字楼订单，在路边树荫下短暂休息——他当天已配送 23 单，衣服被汗水浸透，紧紧贴在背上。同事后来回忆，李师傅当时还笑着说“再送两单就去买冰西瓜”，可话音刚落......</p>
+        </section>
+
+        <section class="li-story__step li-story__step--chest" data-li-step="3">
+          <div class="li-story__character li-story__character--chest" data-li-frame="3">
+            <img class="li-story__image" src="./assets/part2/图5.png" alt="" decoding="async" draggable="false">
+          </div>
+          <p class="li-story__item li-story__text" data-li-copy="3">他就突然捂住胸口，身体缓缓倒在电动车旁。路人紧急拨打 120，送医时李师傅的核心体温已达 41.8℃，确诊为劳力型热射病，虽经 6 小时抢救，最终还是因多器官衰竭离世。他的电动车筐里，还放着下一单待配送的生鲜。</p>
+        </section>
+
+        <section class="li-story__step li-story__step--fall" data-li-step="4">
+          <div class="li-story__character li-story__character--fall" data-li-frame="4">
+            <img class="li-story__image" src="./assets/part2/图6.png" alt="" decoding="async" draggable="false">
+          </div>
+
+          <div class="li-story__item li-story__final-panel li-story__final-panel--p22" data-li-copy="4" aria-label="P2.2 图表">
+            <iframe class="chapter2-chart-iframe chapter2-chart-iframe--p22" src="./charts/P2.2(1).html" title="P2.2 图表" loading="lazy" scrolling="no"></iframe>
+          </div>
+        </section>
+      </div>
+
+      <section class="li-story__lead-section" data-reveal aria-label="热射病导语">
+        <div class="li-story__lead-content">
+          <p class="lead-line lead-line--one">李师傅的悲剧，让“热射病”再次走进公众视野</p>
+          <p class="lead-line lead-line--two">但很多人不知道：</p>
+          <p class="lead-line lead-line--three">热射病从来不是只有高强度户外劳动者才会遇到的风险……</p>
+        </div>
+      </section>
+
+      <section class="li-story__p23-section" data-li-p23-section aria-label="P2.3 热射病患者类型">
+        <div class="li-story__p23-panel">
+          <p class="li-story__p23-copy">2018–2023 年我国累计报告热射病病例 <span>86406</span> 例，其中非劳力型患者占比达 <span>32.02%</span>。非劳力型患者中，60 岁以上老人占比超 <span>55%</span>——他们的体温调节能力随年龄衰退，当室内温度超过 <span>32℃</span>，身体就可能失去“散热平衡”。</p>
+          <div class="li-story__p23-chart" aria-label="P2.3 图表">
+            <iframe class="chapter2-chart-iframe chapter2-chart-iframe--p23" src="./charts/P2.3.html" title="P2.3 图表" loading="lazy" scrolling="no"></iframe>
+          </div>
+        </div>
+      </section>
+
+      <section class="chapter2-chart-section chapter2-chart-section--p24" data-reveal aria-label="P2.4 图表">
+        <div class="chapter2-p24-copy">
+          <h2 class="chapter2-p24-title"><span>致命的</span><strong>“两个月”</strong></h2>
+          <div class="chapter2-p24-body">
+            <p>热射病有极其明显的季节性聚集：7–8月的病例占全年总量的<strong class="p24-stat">87.11%</strong>，死亡病例占比更高达<strong class="p24-stat">94.17%</strong>——一年中最炎热的这两个月，几乎“承包”了所有致命风险。</p>
+            <p>一天中，午后<strong class="p24-stat">2–4点</strong>是风险最高峰——这正是李师傅倒下、也是很多人出门办事的时间。</p>
+            <p>更关键的是，数据测算显示：热射病发病率与年高温天数的相关系数达<strong class="p24-stat">0.7943</strong>（强正相关），意味着高温天每增加10天，发病率可能增加约<strong class="p24-stat">15%</strong>。</p>
+            <p>2024年上海比2023年多了<strong class="p24-stat">6个</strong>高温天，当地医院热射病接诊量同比增加<strong class="p24-stat">14%</strong>——这不是偶然，而是高温与健康风险之间最直接的映射。</p>
+          </div>
+        </div>
+        <div class="chapter2-chart-panel">
+          <iframe class="chapter2-chart-iframe" src="./charts/P2.4.html" title="P2.4 图表" loading="lazy" scrolling="no"></iframe>
+        </div>
+      </section>
+
+      <section class="chapter2-chart-section chapter2-chart-section--p25" data-reveal aria-label="P2.5 图表">
+        <div class="chapter2-p25-copy">
+          <p>在全球范围内，2023年热浪导致超 <strong class="p24-stat">17.8万人</strong> 死亡（The Innovation, 2025），仅欧洲一地就有 <strong class="p24-stat">47,690例</strong> 热相关死亡（Nature Medicine, 2025）。这些数字背后，是和李师傅一样有家庭、有日常、有温度的真实生命。</p>
+        </div>
+        <div class="chapter2-chart-panel">
+          <iframe class="chapter2-chart-iframe" src="./charts/P2.6.html" title="P2.5 热浪核心数据图表" loading="lazy" scrolling="no"></iframe>
+        </div>
+      </section>
+
+    </section>
+
+      <section id="chapter2-economic-cost" class="chapter2 chapter2-economy" aria-label="被高温蒸发的 GDP 与城市电网">
+    <section class="scrolly-demo" aria-label="Spatial scrollytelling demo">
+      <div class="stage" data-stage>
+        <div class="progress-ribbon" aria-hidden="true">
+          <span></span>
+        </div>
+
+        <div class="wayfinder" aria-hidden="true">
+          <span class="is-active"></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+
+        <div class="world" id="world" aria-hidden="true">
+          <section
+            class="scene scene--gate"
+            data-point="0"
+            style="--scene-x: 0px; --scene-y: 0px; --scene-z: 0px; --scene-rx: 0deg; --scene-ry: 0deg; --scene-rz: 0deg;"
+          >
+            <div class="scene--gate__content">
+              <div class="chart-container">
+                <iframe
+                  src="https://1-obosx3zp3-data-journalism-team.vercel.app/"
+                  title="经济图表"
+                  loading="lazy"
+                  frameborder="0"
+                  scrolling="no"
+                  allowfullscreen>
+                </iframe>
+              </div>
+              <div class="scene--gate__copy">
+                <p>在全球范围内，2023年热浪导致超 <strong class="p24-stat">17.8万人</strong> 死亡（The Innovation, 2025），仅欧洲一地就有 <strong class="p24-stat">47,690例</strong> 热相关死亡（Nature Medicine, 2025）。这些数字背后，是和李师傅一样有家庭、有日常、有温度的真实生命。</p>
+              </div>
+            </div>
+          </section>
+
+          <section
+            class="scene scene--canyon"
+            data-point="0.22"
+            style="--scene-x: -430px; --scene-y: 28px; --scene-z: -1120px; --scene-rx: 0deg; --scene-ry: -11deg; --scene-rz: 2deg;"
+          >
+            <div class="scene--gate__content economy-step--2">
+              <div class="chart-container">
+                <iframe
+                  src="./charts/P2.8.html"
+                  title="P2.8 图表"
+                  loading="lazy"
+                  frameborder="0"
+                  scrolling="no"
+                  allowfullscreen>
+                </iframe>
+              </div>
+              <div class="scene--gate__copy">
+                <p>从城市维度看，广州以 <strong class="p24-stat">10亿工作小时损失</strong> 位居榜首，重庆以 <strong class="p24-stat">9亿小时</strong> 紧随其后。</p>
+                <p>这不仅是统计数字——当建筑工人在 <strong class="p24-stat">40℃</strong> 的脚手架上每多工作一小时，当农民在烈日下每多弯腰一次，当外卖员像李师傅一样每多跑一单，这些“蒸发”的经济损失就叠加一层。</p>
+              </div>
+            </div>
+          </section>
+
+          <section
+            class="scene scene--orbit"
+            data-point="0.47"
+            style="--scene-x: 80px; --scene-y: -20px; --scene-z: -2050px; --scene-rx: 0deg; --scene-ry: 5deg; --scene-rz: -1deg;"
+          >
+            <div class="scene--gate__content economy-step--3">
+              <div class="chart-container">
+                <iframe
+                  src="./charts/crop-bar-decline.html"
+                  title="全球升温对主要作物产量的影响"
+                  loading="lazy"
+                  frameborder="0"
+                  scrolling="no"
+                  allowfullscreen>
+                </iframe>
+              </div>
+              <div class="scene--gate__copy">
+                <p>高温带来的损失，并不只发生在城市，也蔓延至田间地头。一项发表于《PNAS》的全球综合研究汇总了统计分析、作物模型和田间增温试验等四类证据发现，在不考虑二氧化碳施肥效应、品种改良和适应性措施的情况下，全球平均气温每升高 <strong class="p24-stat">1℃</strong>，小麦、水稻、玉米和大豆产量将分别平均下降 <strong class="p24-stat">6.0%</strong>、<strong class="p24-stat">3.2%</strong>、<strong class="p24-stat">7.4%</strong> 和 <strong class="p24-stat">3.1%</strong>。</p>
+                <p>这意味着，热浪不仅让人们付出健康和劳动代价，也在悄然压缩粮食产量，其影响还会沿着农业产业链持续传导——农民收入受到冲击，粮食供给趋紧，食品价格承受上涨压力，粮食安全和农业生产韧性也将面临更加严峻的考验。</p>
+              </div>
+            </div>
+          </section>
+
+          <section
+            class="scene scene--cabinet"
+            data-point="0.72"
+            style="--scene-x: 0px; --scene-y: 44px; --scene-z: -3230px; --scene-rx: -2deg; --scene-ry: -6deg; --scene-rz: 1.4deg;"
+          >
+            <div class="scene--gate__content economy-step--4">
+              <div class="economy-step--4__copy">
+                <h2>被高温“点燃”的城市电网</h2>
+                <h3>生理机制</h3>
+                <p>高温环境下，人体为散热会扩张皮肤血管、加速排汗，这使得血液粘稠度显著增加，同时心血管系统被迫高负荷运行。对于本身有基础疾病的人群，这种“双重压力”就是致命导火索——可能诱发心肌梗死、脑卒中等急性事件。</p>
+                <p class="economy-step--4__source">来源：清华大学地球系统科学系 蔡闻佳教授团队</p>
+                <p>然而，空调正在成为对抗这个“隐形杀手”的关键防线。Lancet Countdown 2023中国报告估算：空调每年避免的高温相关死亡例数达 <strong class="p24-stat">5.1万人</strong>。这意味着，对于高温下的弱势群体——老人、慢性病患者、低收入家庭——空调不仅关乎舒适，更关乎生存。</p>
+              </div>
+            </div>
+          </section>
+
+          <section
+            class="scene scene--horizon"
+            data-point="1"
+            style="--scene-x: 0px; --scene-y: -42px; --scene-z: -4660px; --scene-rx: 0deg; --scene-ry: 0deg; --scene-rz: 0deg;"
+          >
+            <div class="scene--gate__content economy-step--5">
+              <div class="chart-container">
+                <iframe
+                  src="./charts/P2.9.html"
+                  title="城市高温与电力需求图表"
+                  loading="lazy"
+                  frameborder="0"
+                  scrolling="no"
+                  allowfullscreen>
+                </iframe>
+              </div>
+              <div class="scene--gate__copy economy-step--5__copy">
+                <p>但这里有一个悖论：空调在挽救生命的同时，也推高了城市的电力需求——而发电本身又会加重碳排放与热岛效应。这形成了一条“越热越开空调 → 越开空调越热”的恶性循环。</p>
+                <p>2025年7月，中国全社会用电量首次单月突破 <strong class="p24-stat">1万亿度</strong> 大关——达 <strong class="p24-stat">1.02万亿kWh</strong>，同比增速 <strong class="p24-stat">+8.6%</strong>。这不是一个普通的数字：它发生在有记录以来最热的夏季之一，空调负荷成为推高曲线的最大力量。</p>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </section>
+      </section>
+      </div>
+    </main>
+  </body>
+</html>
