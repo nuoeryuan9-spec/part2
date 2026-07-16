@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>中国热浪核心数据</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    width:280px;height:397px;
+    background:transparent;
+    font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+    overflow:hidden;
+    position:relative;
+  }
+  .scene{
+    width:100%;height:100%;
+    position:relative;
+  }
+  /* ===== 等距柱体容器 ===== */
+  .bar-group{
+    position:absolute;
+    cursor:pointer;
+    transition:transform 0.3s ease;
+  }
+  .bar-group:hover{
+    transform:translateY(-6px);
+  }
+  .bar-group:hover .bar-top{filter:brightness(1.15)}
+  .bar-group:hover .bar-left{filter:brightness(1.08)}
+  .bar-group:hover .bar-right{filter:brightness(1.12)}
+  .bar-group:hover .value-text{transform:scale(1.08)}
+  .bar-group.active{z-index:10}
+
+  /* SVG 等距柱子 */
+  .iso-svg{overflow:visible}
+
+  /* 数值文字 */
+  .value-text{
+    position:absolute;
+    font-weight:900;
+    font-style:italic;
+    text-align:center;
+    line-height:1;
+    transition:transform 0.3s ease;
+    pointer-events:none;
+    text-shadow:2px 2px 0 rgba(0,0,0,0.15);
+    white-space:nowrap;
+  }
+
+  /* 标签 */
+  .label-text{
+    position:absolute;
+    font-size:11px;
+    font-weight:800;
+    color:#fff;
+    text-align:center;
+    letter-spacing:0.5px;
+    pointer-events:none;
+    text-shadow:1px 1px 2px rgba(0,0,0,0.4);
+    white-space:nowrap;
+  }
+
+  /* 来源小字 */
+  .src-text{
+    position:absolute;
+    font-size:8px;
+    color:rgba(255,255,255,0.75);
+    text-align:center;
+    pointer-events:none;
+    white-space:nowrap;
+  }
+
+  /* 信息卡片 */
+  .info-card{
+    position:absolute;
+    display:none;
+    background:rgba(255,255,255,0.96);
+    border-radius:10px;
+    padding:10px 12px;
+    box-shadow:0 6px 24px rgba(0,0,0,0.18),0 2px 8px rgba(0,0,0,0.1);
+    z-index:100;
+    min-width:160px;
+    max-width:200px;
+    animation:cardIn 0.25s ease;
+  }
+  @keyframes cardIn{from{opacity:0;transform:translateY(8px) scale(0.95)}to{opacity:1;transform:translateY(0) scale(1)}}
+  .info-card h4{font-size:13px;margin-bottom:4px;color:#333}
+  .info-card p{font-size:11px;line-height:1.55;color:#555}
+  .info-card .src{font-size:9px;color:#999;margin-top:5px;border-top:1px solid #eee;padding-top:4px}
+
+  /* 入场动画 */
+  @keyframes barRise{
+    from{opacity:0;transform:translateY(30px)}
+    to{opacity:1;transform:translateY(0)}
+  }
+
+  /* 标题 */
+  .title{
+    position:absolute;top:6px;left:50%;transform:translateX(-50%);
+    font-size:14px;font-weight:900;text-align:center;
+    color:#333;letter-spacing:1px;white-space:nowrap;z-index:5;
+    text-shadow:0 1px 0 rgba(255,255,255,0.8);
+  }
+</style>
+</head>
+<body>
+<div class="scene">
+  <div class="title">中国热浪核心数据</div>
+
+  <!-- 左上: 热浪相关死亡 -->
+  <div class="bar-group" id="bar0" style="left:16px;top:48px">
+    <svg class="iso-svg" width="110" height="130" viewBox="0 0 110 130">
+      <!-- 阴影 -->
+      <ellipse cx="55" cy="122" rx="38" ry="12" fill="rgba(0,0,0,0.08)"/>
+      <!-- 右面 -->
+      <path class="bar-right" d="M55,30 L85,45 L85,115 L55,100 Z" fill="#D4A000" stroke="#B88A00" stroke-width="0.5"/>
+      <!-- 左面 -->
+      <path class="bar-left" d="M25,45 L55,30 L55,100 L25,115 Z" fill="#E8BC00" stroke="#C99A00" stroke-width="0.5"/>
+      <!-- 顶面 -->
+      <path class="bar-top" d="M25,45 L55,30 L85,45 L55,60 Z" fill="#FFD54F" stroke="#D4A000" stroke-width="0.5"/>
+      <!-- 装饰: 小人/图标 -->
+      <circle cx="42" cy="22" r="4" fill="#FF8F00" opacity="0.6"/>
+      <circle cx="68" cy="20" r="3" fill="#FFB300" opacity="0.5"/>
+    </svg>
+    <div class="value-text" style="left:50%;top:0;transform:translateX(-50%);color:#E65100;font-size:36px">5.09万</div>
+    <div class="label-text" style="left:50%;bottom:18px;transform:translateX(-50%)">热浪相关死亡</div>
+    <div class="src-text" style="left:50%;bottom:6px;transform:translateX(-50%)">Lancet 2022</div>
+  </div>
+
+  <!-- 右上: 过早死亡 -->
+  <div class="bar-group" id="bar1" style="right:16px;top:44px">
+    <svg class="iso-svg" width="110" height="120" viewBox="0 0 110 120">
+      <ellipse cx="55" cy="112" rx="38" ry="12" fill="rgba(0,0,0,0.08)"/>
+      <path class="bar-right" d="M55,40 L85,55 L85,105 L55,90 Z" fill="#F9A000" stroke="#D98C00" stroke-width="0.5"/>
+      <path class="bar-left" d="M25,55 L55,40 L55,90 L25,105 Z" fill="#FFB80A" stroke="#E0A000" stroke-width="0.5"/>
+      <path class="bar-top" d="M25,55 L55,40 L85,55 L55,70 Z" fill="#FFE066" stroke="#F9A000" stroke-width="0.5"/>
+      <rect x="40" y="28" rx="2" ry="2" width="12" height="16" fill="#FFA000" opacity="0.5" transform="skewY(-10)"/>
+      <circle cx="66" cy="26" r="3.5" fill="#FFB300" opacity="0.5"/>
+    </svg>
+    <div class="value-text" style="left:50%;top:2px;transform:translateX(-50%);color:#E65100;font-size:32px">2.01万</div>
+    <div class="label-text" style="left:50%;bottom:16px;transform:translateX(-50%)">热浪过早死亡</div>
+    <div class="src-text" style="left:50%;bottom:4px;transform:translateX(-50%)">WHO 2023</div>
+  </div>
+
+  <!-- 左下: 增幅 -->
+  <div class="bar-group" id="bar2" style="left:10px;top:210px">
+    <svg class="iso-svg" width="118" height="145" viewBox="0 0 118 145">
+      <ellipse cx="59" cy="137" rx="42" ry="13" fill="rgba(0,0,0,0.09)"/>
+      <path class="bar-right" d="M59,25 L93,43 L93,128 L59,110 Z" fill="#E65100" stroke="#BF360C" stroke-width="0.5"/>
+      <path class="bar-left" d="M25,43 L59,25 L59,110 L25,128 Z" fill="#F57C00" stroke="#E65100" stroke-width="0.5"/>
+      <path class="bar-top" d="M25,43 L59,25 L93,43 L59,61 Z" fill="#FFB74D" stroke="#F57C00" stroke-width="0.5"/>
+      <!-- 向上箭头装饰 -->
+      <polygon points="52,14 59,4 66,14 62,14 62,20 56,20 56,14" fill="#FF5722" opacity="0.7"/>
+      <circle cx="72" cy="15" r="3" fill="#FF7043" opacity="0.5"/>
+    </svg>
+    <div class="value-text" style="left:50%;top:-4px;transform:translateX(-50%);color:#BF360C;font-size:40px">+190%</div>
+    <div class="label-text" style="left:50%;bottom:20px;transform:translateX(-50%)">死亡较基线增幅</div>
+    <div class="src-text" style="left:50%;bottom:6px;transform:translateX(-50%)">Lancet 2023</div>
+  </div>
+
+  <!-- 右下: 暴露天数 -->
+  <div class="bar-group" id="bar3" style="right:8px;top:218px">
+    <svg class="iso-svg" width="114" height="138" viewBox="0 0 114 138">
+      <ellipse cx="57" cy="130" rx="40" ry="12" fill="rgba(0,0,0,0.09)"/>
+      <path class="bar-right" d="M57,35 L89,51 L89,121 L57,105 Z" fill="#C62828" stroke="#8E0000" stroke-width="0.5"/>
+      <path class="bar-left" d="M25,51 L57,35 L57,105 L25,121 Z" fill="#E53935" stroke="#C62828" stroke-width="0.5"/>
+      <path class="bar-top" d="M25,51 L57,35 L89,51 L57,67 Z" fill="#EF5350" stroke="#E53935" stroke-width="0.5"/>
+      <!-- 太阳装饰 -->
+      <g transform="translate(48,20)">
+        <circle r="7" fill="#FFC107" opacity="0.6"/>
+        <line x1="0" y1="-10" x2="0" y2="-13" stroke="#FF9800" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="7" y1="-7" x2="9.5" y2="-9.5" stroke="#FF9800" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="10" y1="0" x2="13" y2="0" stroke="#FF9800" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="7" y1="7" x2="9.5" y2="9.5" stroke="#FF9800" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="-7" y1="-7" x2="-9.5" y2="-9.5" stroke="#FF9800" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="-10" y1="0" x2="-13" y2="0" stroke="#FF9800" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="-7" y1="7" x2="-9.5" y2="9.5" stroke="#FF9800" stroke-width="1.5" stroke-linecap="round"/>
+      </g>
+    </svg>
+    <div class="value-text" style="left:50%;top:0;transform:translateX(-50%);color:#B71C1C;font-size:38px">16天</div>
+    <div class="label-text" style="left:50%;bottom:18px;transform:translateX(-50%)">年均热浪暴露</div>
+    <div class="src-text" style="left:50%;bottom:5px;transform:translateX(-50%)">气象统计</div>
+  </div>
+
+  <!-- 信息卡片 -->
+  <div class="info-card" id="infoCard">
+    <h4 id="icTitle"></h4>
+    <p id="icDesc"></p>
+    <div class="src" id="icSrc"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var bars = [
+    {id:'bar0', title:'热浪相关死亡', val:'5.09万',
+     desc:'2022年中国因高温热浪导致的死亡人数，占全球热浪相关死亡的约四分之一，是气候变化的直接健康代价。',
+     src:'Lancet Countdown Report 2022 / 中国疾病预防控制中心'},
+    {id:'bar1', title:'热浪过早死亡', val:'2.01万',
+     desc:'中国每年因热浪导致的过早死亡人数，主要集中在老年人群和户外劳动者群体中。',
+     src:'World Health Organization 2023 / 全球卫生观察站'},
+    {id:'bar2', title:'死亡较基线增幅', val:'+190%',
+     desc:'热浪期间死亡率较历史同期基线水平增长近两倍，极端高温日的超额死亡风险急剧攀升。',
+     src:'Lancet Countdown China Report 2023'},
+    {id:'bar3', title:'年均热浪暴露', val:'16天',
+     desc:'中国人均每年经历的热浪高温暴露天数约为历史水平的3倍以上，且呈持续增长趋势。',
+     src:'国家气候中心历史气象统计数据'}
+  ];
+
+  var card = document.getElementById('infoCard');
+  var icTitle = document.getElementById('icTitle');
+  var icDesc = document.getElementById('icDesc');
+  var icSrc = document.getElementById('icSrc');
+  var activeBar = null;
+
+  // 入场动画
+  for(var i=0;i<bars.length;i++){
+    (function(idx){
+      var el = document.getElementById(bars[idx].id);
+      el.style.opacity='0';
+      el.style.transform='translateY(25px)';
+      setTimeout(function(){
+        el.style.transition='opacity 0.5s ease, transform 0.5s ease';
+        el.style.opacity='1';
+        el.style.transform='translateY(0)';
+      }, 150 + idx*150);
+    })(i);
+  }
+
+  function showCard(barData, targetEl){
+    icTitle.textContent = barData.title + '：' + barData.val;
+    icDesc.textContent = barData.desc;
+    icSrc.textContent = '来源：' + barData.src;
+
+    var rect = targetEl.getBoundingClientRect();
+    var sceneRect = document.querySelector('.scene').getBoundingClientRect();
+
+    card.style.display='block';
+
+    // 自动定位
+    var cw = 200, ch = 120;
+    var left = rect.left - sceneRect.left + rect.width/2 - cw/2;
+    var top = rect.top - sceneRect.top - ch - 12;
+
+    // 边界修正
+    if(left < 2) left = 2;
+    if(left + cw > 278) left = 278 - cw;
+    if(top < 2) top = rect.bottom - sceneRect.top + 8;
+
+    card.style.left = left + 'px';
+    card.style.top = top + 'px';
+    card.style.width = Math.min(cw, 278 - left - 2) + 'px';
+  }
+
+  function hideCard(){
+    card.style.display='none';
+    activeBar=null;
+  }
+
+  for(var j=0;j<bars.length;j++){
+    (function(idx){
+      var el = document.getElementById(bars[idx].id);
+
+      el.addEventListener('mouseenter', function(e){
+        showCard(bars[idx], this);
+        this.classList.add('active');
+      });
+
+      el.addEventListener('mouseleave', function(){
+        hideCard();
+        this.classList.remove('active');
+      });
+
+      el.addEventListener('click', function(e){
+        e.stopPropagation();
+        if(activeBar===this){
+          hideCard();
+        }else{
+          showCard(bars[idx], this);
+          activeBar=this;
+        }
+      });
+    })(j);
+  }
+
+  document.querySelector('.scene').addEventListener('click', function(e){
+    if(e.target===this || e.target.classList.contains('title')){
+      hideCard();
+    }
+  });
+})();
+</script>
+</body>
+</html>
